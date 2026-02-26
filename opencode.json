@@ -4,7 +4,8 @@
     "AGENTS.md",
     "docs/outline.md",
     "docs/plan.md",
-    "docs/decisions.md"
+    "docs/decisions.md",
+    "docs/visual-direction.md"
   ],
   "formatter": {
     "prettier": {

@@ -6,7 +6,8 @@ This is a vibecoding template for AI-assisted development.
 
 1. Read `docs/outline.md` — this is the scope lock. Only build what is listed there.
 2. Read `docs/plan.md` — this is the phased implementation plan.
-3. Check `docs/screenshots/` and `docs/moodboard/` for visual references. If images are present, use them as inspiration for layout, styling, and visual direction. If the directories are empty, skip this step and use your best judgment.
+3. **Visual direction:** If `docs/visual-direction.md` exists and is non-empty (not just the placeholder), read it for color, typography, tone, and layout guidance. If it is empty/placeholder, check `docs/screenshots/` and `docs/moodboard/` for images instead. If those are also empty, use your best judgment. Do NOT re-read images if `docs/visual-direction.md` already has content.
+4. **Skills check:** Check whether `.agents/skills/` exists and has installed skills. If it is missing or empty, run `/setup-skills` (or prompt the user to) before starting implementation. See `docs/skills.md` for the recommended skill list.
 
 ---
 
@@ -99,6 +100,20 @@ This is a vibecoding template for AI-assisted development.
 - Do not leave the repo in a failing state on main.
 - Before commit: tests pass (or explain why not), app runs locally.
 
+### 7. Plan & Outline Tracking (NON-NEGOTIABLE)
+
+- **After every completed task:** update `docs/plan.md` — check off the completed item, add sub-bullets if the task was broken into smaller steps.
+- **After every completed task:** update `docs/outline.md` — check off the corresponding Definition of Done checkbox if applicable.
+- If a new task is added mid-session that was not in the plan, add it to `docs/plan.md` before starting it.
+- These files are the single source of truth for what has been done and what remains.
+
+### 8. Skills
+
+- Project-specific skills live in `.opencode/skills/` (committed, always available).
+- Third-party skills live in `.agents/skills/` (gitignored, installed locally per developer).
+- Before starting implementation: if `.agents/skills/` is empty or missing, run `/setup-skills`.
+- See `docs/skills.md` for the full skills reference, install commands, and recommended skill list.
+
 ---
 
 ## Stack
@@ -120,15 +135,17 @@ src/
   lib/              # shared utilities
   test/             # test setup
 docs/
-  outline.md        # scope lock — the single source of truth
-  plan.md           # phased implementation plan
-  decisions.md      # architecture decision log
-  prompts.md        # reusable prompts for AI tools
-  QUICKSTART.md     # setup + commands
-  screenshots/      # UI inspiration images
-  moodboard/        # visual direction assets
+  outline.md           # scope lock — the single source of truth
+  plan.md              # phased implementation plan
+  decisions.md         # architecture decision log
+  prompts.md           # reusable prompts for AI tools
+  skills.md            # skills reference (install commands, recommended list)
+  visual-direction.md  # generated visual summary (run /generate-visual-direction)
+  QUICKSTART.md        # setup + commands
+  screenshots/         # UI inspiration images
+  moodboard/           # visual direction assets
 .opencode/
-  commands/         # custom slash commands (/lint, /test, /build, /new-feature, /review)
+  commands/         # custom slash commands (/lint, /test, /build, /new-feature, /review, /setup-skills, /generate-visual-direction)
   skills/           # agent skills (add-feature, add-component, add-route)
 opencode.json       # OpenCode configuration (instructions, formatters, MCP)
 ```
@@ -136,12 +153,14 @@ opencode.json       # OpenCode configuration (instructions, formatters, MCP)
 ## Workflow
 
 1. Read `docs/outline.md` and `docs/plan.md`.
-2. Propose the next single smallest task.
-3. Before coding: cite which exact bullet in the outline it supports.
-4. If the task involves UI, review `docs/screenshots/` and `docs/moodboard/` for visual direction. If empty, use your best judgment.
-5. Implement without adding features not in the outline.
-6. After coding: run `/lint` and `/build` to verify (or `npm run lint` and `npm run build`).
-7. Suggest a checkpoint commit message.
+2. Check `docs/visual-direction.md` — if populated, use it. Otherwise check `docs/moodboard/` and `docs/screenshots/`. Run `/generate-visual-direction` if images are present but the file hasn't been generated yet.
+3. Check `.agents/skills/` — if empty or missing, run `/setup-skills` before coding.
+4. Propose the next single smallest task.
+5. Before coding: cite which exact bullet in the outline it supports.
+6. Implement without adding features not in the outline.
+7. After coding: run `/lint` and `/build` to verify (or `npm run lint` and `npm run build`).
+8. Update `docs/plan.md` and `docs/outline.md` checkboxes.
+9. Suggest a checkpoint commit message.
 
 ## OpenCode skills and commands
 
@@ -153,6 +172,8 @@ This project includes reusable agent skills and custom commands via `.opencode/`
 - `add-component` — add a shadcn/ui component or create a custom reusable component
 - `add-route` — add React Router and configure a new route/page
 
+Third-party skills (from the Context7 registry) live in `.agents/skills/` — see `docs/skills.md` for install instructions and the recommended list.
+
 **Commands** (run via `/command-name` in OpenCode):
 
 - `/lint` — run linting and auto-fix issues
@@ -160,6 +181,8 @@ This project includes reusable agent skills and custom commands via `.opencode/`
 - `/build` — type-check and build for production
 - `/new-feature <name>` — scaffold a new feature slice (uses the `add-feature` skill)
 - `/review` — review recent changes for quality issues
+- `/setup-skills` — check installed skills and offer to install recommended ones
+- `/generate-visual-direction` — read moodboard/screenshot images and write `docs/visual-direction.md`
 
 When scaffolding new features, prefer using the `/new-feature` command or the `add-feature` skill to ensure consistent structure.
 
@@ -167,3 +190,5 @@ When scaffolding new features, prefer using the `/new-feature` command or the `a
 
 - If the plan changes, update `docs/plan.md`.
 - If a tool/approach choice changes, update `docs/decisions.md`.
+- After every completed task, check off `docs/plan.md` and `docs/outline.md` (DoD) items.
+- Visual direction lives in `docs/visual-direction.md` (generated) — re-run `/generate-visual-direction` if the moodboard changes.
