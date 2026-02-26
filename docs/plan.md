@@ -61,6 +61,17 @@
 - [x] SharePage: font-display headings, warm cost display
 - [x] Update docs (decisions.md, plan.md)
 
+### Phase 3a.1 — Light/Dark Theme Toggle
+
+- [x] Designed light theme tokens: warm cream bg, terracotta/coral primary, soft borders (moodboard-inspired)
+- [x] Made all CSS utilities theme-aware (glows, glass, gradients, table-striped) with `:root` / `.dark` variants
+- [x] Created Zustand theme store (`theme-store.ts`) with localStorage persistence
+- [x] Added inline script in `index.html` to prevent theme flash on load
+- [x] Removed hardcoded `.dark` class from Layout, SharePage, index.html
+- [x] Added Sun/Moon toggle button to sidebar footer + mobile header
+- [x] Replaced hardcoded Tailwind palette colors with semantic tokens for theme consistency
+- [x] Update docs (decisions.md, plan.md)
+
 ### Phase 3b — Remaining polish
 
 - [ ] Accessibility pass (keyboard/focus, labels)

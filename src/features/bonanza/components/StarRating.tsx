@@ -59,7 +59,7 @@ export function StarRating({
               className={cn(
                 starSize,
                 filled
-                  ? 'fill-amber-400 text-amber-400'
+                  ? 'fill-warm text-warm'
                   : 'fill-transparent text-muted-foreground/40'
               )}
             />

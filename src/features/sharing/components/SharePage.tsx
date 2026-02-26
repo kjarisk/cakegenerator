@@ -58,7 +58,7 @@ export function Component() {
 
   if (error || !data?.concept) {
     return (
-      <div className="dark min-h-svh bg-background">
+      <div className="min-h-svh bg-background">
         <div className="mx-auto max-w-3xl px-4 py-8">
           <SharedHeader />
           <Card className="mt-8">
@@ -106,7 +106,7 @@ export function Component() {
   }
 
   return (
-    <div className="dark min-h-svh bg-background">
+    <div className="min-h-svh bg-background">
       <div className="mx-auto max-w-3xl px-4 py-8">
         <SharedHeader />
 
@@ -201,7 +201,7 @@ export function Component() {
                   <Button
                     onClick={handleApprove}
                     disabled={approvalMutation.isPending}
-                    className="bg-green-600 hover:bg-green-700 shadow-[0_0_12px_oklch(0.6_0.2_145_/_0.2)]"
+                    className="bg-green-600 hover:bg-green-700 shadow-glow-sm"
                   >
                     <CheckCircle2 className="mr-1.5 h-4 w-4" />
                     Approve
@@ -289,18 +289,18 @@ function SharedHeader() {
 function ApprovalBanner({ status }: { status: string }) {
   if (status === 'approved') {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-green-500/30 bg-green-500/10 p-3">
-        <CheckCircle2 className="h-5 w-5 text-green-500" />
-        <span className="text-sm font-medium text-green-500">Approved</span>
+      <div className="flex items-center gap-2 rounded-lg border border-success/30 bg-success/10 p-3">
+        <CheckCircle2 className="h-5 w-5 text-success" />
+        <span className="text-sm font-medium text-success">Approved</span>
       </div>
     )
   }
 
   if (status === 'rejected') {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-orange-500/30 bg-orange-500/10 p-3">
-        <XCircle className="h-5 w-5 text-orange-500" />
-        <span className="text-sm font-medium text-orange-500">
+      <div className="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 p-3">
+        <XCircle className="h-5 w-5 text-destructive" />
+        <span className="text-sm font-medium text-destructive">
           Changes Requested
         </span>
       </div>
@@ -418,7 +418,7 @@ function CommentForm({
 
 function SharedPageSkeleton() {
   return (
-    <div className="dark min-h-svh bg-background">
+    <div className="min-h-svh bg-background">
       <div className="mx-auto max-w-3xl px-4 py-8">
         <SharedHeader />
         <div className="mt-6 flex flex-col gap-6">

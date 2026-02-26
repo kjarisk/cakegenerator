@@ -33,6 +33,11 @@ Keep this short: what we decided, and why.
 - 2026-02-26: Space Grotesk as display font (`--font-display`) for headings — loaded via Google Fonts.
 - 2026-02-26: New CSS utility classes: `shadow-glow-warm`, `animate-pulse-glow`, `text-gradient-warm`, `bg-radial-glow-*`, `table-striped`.
 - 2026-02-26: Borders boosted to L=0.35, muted-foreground to L=0.78 for better readability.
+- 2026-02-26: Light/dark theme toggle — Zustand store (`theme-store.ts`) with localStorage persistence, inline script in index.html to prevent flash.
+- 2026-02-26: Light theme: warm cream/off-white bg (`oklch(0.965 0.008 75)`), terracotta/coral primary (`oklch(0.52 0.14 30)`), inspired by moodboard (Ashton Aesthetics aesthetic).
+- 2026-02-26: All CSS utility classes (glows, glass, gradients, table-striped) made theme-aware with `:root` / `.dark` variants.
+- 2026-02-26: Replaced hardcoded Tailwind palette colors (amber-400, green-500, orange-500, emerald-400) with semantic tokens (`--warm`, `--success`, `--destructive`) for theme consistency.
+- 2026-02-26: Dark mode remains the default — toggle persists choice to localStorage.
 
 ## UI system choice (per project)
 

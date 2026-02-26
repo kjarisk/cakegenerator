@@ -225,7 +225,7 @@ export function CalendarView({
                       di < 6 ? 'border-r border-border' : '',
                       !day.isCurrentMonth ? 'opacity-35' : '',
                       day.assignment && day.isCurrentMonth && !isCurrentWeekRow
-                        ? 'bg-primary/[0.03]'
+                        ? 'bg-primary/[0.06]'
                         : '',
                     ]
                       .filter(Boolean)
@@ -305,7 +305,7 @@ export function CalendarView({
                                 {[1, 2, 3, 4, 5].map((s) => (
                                   <Star
                                     key={s}
-                                    className={`h-2.5 w-2.5 ${s <= (weekAssignment.rating ?? 0) ? 'fill-amber-400 text-amber-400' : 'fill-transparent text-muted-foreground/30'}`}
+                                    className={`h-2.5 w-2.5 ${s <= (weekAssignment.rating ?? 0) ? 'fill-warm text-warm' : 'fill-transparent text-muted-foreground/30'}`}
                                   />
                                 ))}
                               </div>
@@ -362,7 +362,7 @@ export function CalendarView({
           Today
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="inline-block h-2.5 w-2.5 rounded-sm bg-accent/20" />
+          <span className="inline-block h-2.5 w-2.5 rounded-sm bg-accent/40" />
           Current week
         </div>
         <div className="flex items-center gap-1.5">
@@ -443,7 +443,7 @@ function UpcomingAssignments({
               {isNow && <span className="text-[10px] opacity-75">Now</span>}
               {a.rating && a.rating > 0 && (
                 <span className="flex items-center gap-0.5 text-[10px]">
-                  <Star className="h-2.5 w-2.5 fill-amber-400 text-amber-400" />
+                  <Star className="h-2.5 w-2.5 fill-warm text-warm" />
                   {a.rating}
                 </span>
               )}

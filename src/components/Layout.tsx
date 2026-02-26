@@ -7,9 +7,12 @@ import {
   Calendar,
   Sparkles,
   Zap,
+  Sun,
+  Moon,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { aiMode } from '@/lib/ai-service'
+import { useThemeStore } from '@/lib/theme-store'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
@@ -25,6 +28,8 @@ const navItems = [
 ]
 
 function NavContent({ onNavigate }: { onNavigate?: () => void }) {
+  const { theme, toggleTheme } = useThemeStore()
+
   return (
     <div className="flex h-full flex-col">
       {/* Logo */}
@@ -85,18 +90,33 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
       {/* Footer */}
       <div className="border-t border-sidebar-border p-4">
         <div className="flex items-center justify-between">
-          <p className="text-[10px] text-muted-foreground/50">CakeGen v1</p>
-          <span
-            className={cn(
-              'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium',
-              aiMode === 'live'
-                ? 'bg-emerald-500/15 text-emerald-400'
-                : 'bg-muted text-muted-foreground/60'
-            )}
+          <div className="flex items-center gap-2">
+            <p className="text-[10px] text-muted-foreground/50">CakeGen v1</p>
+            <span
+              className={cn(
+                'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium',
+                aiMode === 'live'
+                  ? 'bg-success/15 text-success'
+                  : 'bg-muted text-muted-foreground/60'
+              )}
+            >
+              <Zap className="h-2.5 w-2.5" />
+              AI: {aiMode === 'live' ? 'Live' : 'Mock'}
+            </span>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="h-7 w-7 rounded-full"
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
           >
-            <Zap className="h-2.5 w-2.5" />
-            AI: {aiMode === 'live' ? 'Live' : 'Mock'}
-          </span>
+            {theme === 'dark' ? (
+              <Sun className="h-3.5 w-3.5 text-warm" />
+            ) : (
+              <Moon className="h-3.5 w-3.5 text-muted-foreground" />
+            )}
+          </Button>
         </div>
       </div>
     </div>
@@ -105,9 +125,10 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
 
 export function Component() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const { theme, toggleTheme } = useThemeStore()
 
   return (
-    <div className="dark flex min-h-svh bg-background">
+    <div className="flex min-h-svh bg-background">
       {/* Desktop sidebar */}
       <aside className="hidden w-60 shrink-0 border-r border-sidebar-border bg-sidebar md:block">
         <NavContent />
@@ -127,13 +148,26 @@ export function Component() {
               <NavContent onNavigate={() => setMobileOpen(false)} />
             </SheetContent>
           </Sheet>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-1 items-center gap-2">
             <div className="relative">
               <Cake className="h-5 w-5 text-accent" />
               <Sparkles className="absolute -right-1.5 -top-1.5 h-2.5 w-2.5 text-accent animate-sparkle" />
             </div>
             <span className="font-bold">CakeGen</span>
           </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="h-8 w-8 rounded-full"
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          >
+            {theme === 'dark' ? (
+              <Sun className="h-4 w-4 text-warm" />
+            ) : (
+              <Moon className="h-4 w-4 text-muted-foreground" />
+            )}
+          </Button>
         </header>
 
         {/* Main content */}
