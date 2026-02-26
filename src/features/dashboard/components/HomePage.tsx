@@ -119,15 +119,27 @@ export function Component() {
       {/* Hero section */}
       <div className="relative overflow-hidden rounded-2xl border border-accent/20 bg-gradient-to-br from-primary/20 via-accent/10 to-background p-8 md:p-12">
         {/* Decorative blobs — boosted opacity for drama */}
-        <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-accent/25 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-primary/20 blur-3xl" />
-        <div className="pointer-events-none absolute right-1/3 top-1/4 h-40 w-40 rounded-full bg-warm/15 blur-3xl" />
+        <div
+          className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-accent/25 blur-3xl"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-primary/20 blur-3xl"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute right-1/3 top-1/4 h-40 w-40 rounded-full bg-warm/15 blur-3xl"
+          aria-hidden
+        />
 
         <div className="relative flex flex-col items-start gap-6 md:flex-row md:items-center md:gap-12">
           {/* Left: copy */}
           <div className="flex flex-1 flex-col gap-4">
             <div className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-warm animate-sparkle" />
+              <Sparkles
+                className="h-5 w-5 text-warm animate-sparkle"
+                aria-hidden
+              />
               <span className="text-xs font-semibold uppercase tracking-widest text-warm">
                 Theme Cake Generator
               </span>
@@ -147,7 +159,7 @@ export function Component() {
                 className="bg-accent hover:bg-accent/90 shadow-glow-accent animate-pulse-glow font-semibold"
               >
                 <Link to="/create">
-                  <Plus className="mr-2 h-4 w-4" />
+                  <Plus className="mr-2 h-4 w-4" aria-hidden />
                   Generate Cake Concept
                 </Link>
               </Button>
@@ -159,7 +171,7 @@ export function Component() {
               >
                 <Link to="/bank">
                   Browse Cake Bank
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowRight className="ml-2 h-4 w-4" aria-hidden />
                 </Link>
               </Button>
             </div>
@@ -167,7 +179,7 @@ export function Component() {
 
           {/* Right: animated cake illustration */}
           <div className="hidden md:block">
-            <div className="animate-float relative">
+            <div className="animate-float relative" aria-hidden>
               <div className="flex h-44 w-44 items-center justify-center rounded-2xl bg-gradient-to-br from-accent/30 via-primary/20 to-warm/15 shadow-glow-accent ring-1 ring-accent/20">
                 <Cake className="h-20 w-20 text-accent" />
               </div>
@@ -217,7 +229,10 @@ export function Component() {
                 <div
                   className={`mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${feature.gradient} ring-1 ring-border/60`}
                 >
-                  <feature.icon className={`h-5 w-5 ${feature.iconColor}`} />
+                  <feature.icon
+                    className={`h-5 w-5 ${feature.iconColor}`}
+                    aria-hidden
+                  />
                 </div>
                 <CardTitle className="font-display text-base group-hover:text-accent transition-colors">
                   {feature.label}
@@ -247,7 +262,7 @@ export function Component() {
               <div
                 className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${h.bg}`}
               >
-                <h.icon className={`h-4 w-4 ${h.color}`} />
+                <h.icon className={`h-4 w-4 ${h.color}`} aria-hidden />
               </div>
               <div>
                 <p className="text-sm font-semibold">{h.label}</p>

@@ -109,10 +109,13 @@ export function HypeBanner({ assignment, user, periodName }: HypeBannerProps) {
   return (
     <div className="relative overflow-hidden rounded-2xl border border-warm/30">
       {/* Animated gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-pink-500/20 to-amber-400/20 dark:from-purple-600/30 dark:via-pink-500/25 dark:to-amber-400/20 animate-gradient-shift" />
+      <div
+        className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-pink-500/20 to-amber-400/20 dark:from-purple-600/30 dark:via-pink-500/25 dark:to-amber-400/20 animate-gradient-shift"
+        aria-hidden
+      />
 
       {/* Radial glow */}
-      <div className="absolute inset-0 bg-radial-glow-warm opacity-40" />
+      <div className="absolute inset-0 bg-radial-glow-warm opacity-40" aria-hidden />
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center gap-3 px-6 py-8 text-center sm:py-10">
@@ -165,8 +168,11 @@ export function HypeBanner({ assignment, user, periodName }: HypeBannerProps) {
 
         {/* Non-Friday alert */}
         {isNotFriday && (
-          <div className="mt-2 flex items-center gap-2 rounded-lg border border-warm/40 bg-warm/10 px-4 py-2 text-sm font-medium">
-            <AlertTriangle className="h-4 w-4 text-warm shrink-0" />
+          <div
+            role="alert"
+            className="mt-2 flex items-center gap-2 rounded-lg border border-warm/40 bg-warm/10 px-4 py-2 text-sm font-medium"
+          >
+            <AlertTriangle className="h-4 w-4 text-warm shrink-0" aria-hidden />
             <span>
               <span className="font-bold text-warm">HEADS UP!</span> Cake day is{' '}
               <span className="font-bold">

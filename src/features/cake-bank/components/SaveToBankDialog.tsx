@@ -103,7 +103,7 @@ export function SaveToBankDialog({
   }
 
   // Parse current tags for preview
-  const tagsValue = form.watch('tags') // eslint-disable-line react-hooks/incompatible-library
+  const tagsValue = form.watch('tags')
   const tagPreview = tagsValue
     .split(',')
     .map((t) => t.trim())

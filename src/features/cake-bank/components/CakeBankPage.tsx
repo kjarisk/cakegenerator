@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { Link } from 'react-router'
 import {
   Library,
@@ -74,14 +75,17 @@ export function Component() {
     }
   }
 
-  const handleRemoveFromBank = async (conceptId: string) => {
-    try {
-      await removeFromBankMutation.mutateAsync(conceptId)
-      toast.success('Removed from Cake Bank')
-    } catch {
-      toast.error('Failed to remove concept')
-    }
-  }
+  const handleRemoveFromBank = useCallback(
+    async (conceptId: string) => {
+      try {
+        await removeFromBankMutation.mutateAsync(conceptId)
+        toast.success('Removed from Cake Bank')
+      } catch {
+        toast.error('Failed to remove concept')
+      }
+    },
+    [removeFromBankMutation]
+  )
 
   const isLoading = categoriesLoading || conceptsLoading
 
@@ -90,7 +94,7 @@ export function Component() {
       {/* Page header */}
       <div className="flex flex-col gap-1">
         <div className="flex items-center gap-2">
-          <Library className="h-6 w-6 text-primary" />
+          <Library className="h-6 w-6 text-primary" aria-hidden />
           <h1 className="font-display text-2xl font-bold tracking-tight">
             Cake Bank
           </h1>
@@ -116,7 +120,7 @@ export function Component() {
                   onClick={() => setCreateCategoryOpen(true)}
                   aria-label="Create category"
                 >
-                  <Plus className="h-4 w-4" />
+                  <Plus className="h-4 w-4" aria-hidden />
                 </Button>
               </div>
             </CardHeader>
@@ -129,17 +133,23 @@ export function Component() {
                 </div>
               ) : (
                 <ScrollArea className="max-h-64">
-                  <nav className="flex flex-col gap-0.5">
+                  <nav
+                    className="flex flex-col gap-0.5"
+                    aria-label="Cake Bank categories"
+                  >
                     {/* All saved */}
                     <button
                       onClick={() => setSelectedCategoryId(null)}
+                      aria-current={
+                        selectedCategoryId === null ? 'page' : undefined
+                      }
                       className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors text-left ${
                         selectedCategoryId === null
                           ? 'bg-accent text-accent-foreground'
                           : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                       }`}
                     >
-                      <FolderOpen className="h-4 w-4 shrink-0" />
+                      <FolderOpen className="h-4 w-4 shrink-0" aria-hidden />
                       <span className="truncate">All Saved</span>
                       <Badge
                         variant="secondary"
@@ -156,13 +166,16 @@ export function Component() {
                       >
                         <button
                           onClick={() => setSelectedCategoryId(cat.id)}
+                          aria-current={
+                            selectedCategoryId === cat.id ? 'page' : undefined
+                          }
                           className={`flex flex-1 items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors text-left min-w-0 ${
                             selectedCategoryId === cat.id
                               ? 'bg-accent text-accent-foreground'
                               : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                           }`}
                         >
-                          <Tag className="h-3.5 w-3.5 shrink-0" />
+                          <Tag className="h-3.5 w-3.5 shrink-0" aria-hidden />
                           <span className="truncate">{cat.name}</span>
                           <Badge
                             variant="secondary"
@@ -178,7 +191,10 @@ export function Component() {
                           onClick={() => handleDeleteCategory(cat.id)}
                           aria-label={`Delete category ${cat.name}`}
                         >
-                          <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                          <Trash2
+                            className="h-3.5 w-3.5 text-destructive"
+                            aria-hidden
+                          />
                         </Button>
                       </div>
                     ))}
@@ -199,12 +215,16 @@ export function Component() {
         <div className="flex-1 space-y-4">
           {/* Search bar */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Search
+              className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden
+            />
             <Input
               placeholder="Search by title or tags..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-9"
+              aria-label="Search cake concepts"
             />
           </div>
 
@@ -226,7 +246,7 @@ export function Component() {
                 <ConceptCard
                   key={concept.id}
                   concept={concept}
-                  onRemove={() => handleRemoveFromBank(concept.id)}
+                  onRemove={handleRemoveFromBank}
                 />
               ))}
             </div>
@@ -250,7 +270,7 @@ function ConceptCard({
   onRemove,
 }: {
   concept: CakeConcept
-  onRemove: () => void
+  onRemove: (id: string) => void
 }) {
   return (
     <Card className="group overflow-hidden hover-glow transition-all duration-200 hover:scale-[1.02]">
@@ -261,7 +281,10 @@ function ConceptCard({
             alt={concept.title}
             className="h-full w-full object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
           />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent opacity-60" />
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent opacity-60"
+            aria-hidden
+          />
         </div>
       </Link>
       <CardHeader className="pb-2">
@@ -297,8 +320,9 @@ function ConceptCard({
             className="h-6 px-2 text-xs text-destructive hover:text-destructive"
             onClick={(e) => {
               e.preventDefault()
-              onRemove()
+              onRemove(concept.id)
             }}
+            aria-label={`Remove ${concept.title} from Cake Bank`}
           >
             Remove
           </Button>
@@ -319,7 +343,7 @@ function EmptyState({
     return (
       <Card>
         <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
-          <Search className="h-10 w-10 text-muted-foreground/50" />
+          <Search className="h-10 w-10 text-muted-foreground/50" aria-hidden />
           <div>
             <p className="font-medium">No matching concepts</p>
             <p className="text-sm text-muted-foreground">
@@ -335,7 +359,10 @@ function EmptyState({
     return (
       <Card>
         <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
-          <FolderOpen className="h-10 w-10 text-muted-foreground/50" />
+          <FolderOpen
+            className="h-10 w-10 text-muted-foreground/50"
+            aria-hidden
+          />
           <div>
             <p className="font-medium">Category is empty</p>
             <p className="text-sm text-muted-foreground">
@@ -350,7 +377,7 @@ function EmptyState({
   return (
     <Card>
       <CardContent className="flex flex-col items-center gap-4 py-12 text-center">
-        <div className="relative">
+        <div className="relative" aria-hidden>
           <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-accent/20 via-primary/15 to-warm/15 shadow-glow-accent">
             <Cake className="h-10 w-10 text-accent" />
           </div>
@@ -368,7 +395,7 @@ function EmptyState({
           className="bg-accent hover:bg-accent/90 shadow-glow-accent"
         >
           <Link to="/create">
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus className="mr-2 h-4 w-4" aria-hidden />
             Generate Cake Concept
           </Link>
         </Button>

@@ -52,7 +52,7 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
 
       {/* Nav links */}
       <ScrollArea className="flex-1 px-2">
-        <nav className="flex flex-col gap-1 py-2">
+        <nav aria-label="Main navigation" className="flex flex-col gap-1 py-2">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
@@ -130,7 +130,10 @@ export function Component() {
   return (
     <div className="flex min-h-svh bg-background">
       {/* Desktop sidebar */}
-      <aside className="hidden w-60 shrink-0 border-r border-sidebar-border bg-sidebar md:block">
+      <aside
+        aria-label="Sidebar"
+        className="hidden w-60 shrink-0 border-r border-sidebar-border bg-sidebar md:block"
+      >
         <NavContent />
       </aside>
 

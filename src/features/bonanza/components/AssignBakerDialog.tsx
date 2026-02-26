@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import {
   Dialog,
@@ -132,7 +133,9 @@ export function AssignBakerDialog({
         <div className="space-y-4">
           {/* Baker selection */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Baker</label>
+            <Label htmlFor="assign-baker-select" className="text-sm font-medium">
+              Baker
+            </Label>
             {users.length > 0 && (
               <Select
                 value={selectedUserId}
@@ -141,7 +144,7 @@ export function AssignBakerDialog({
                   setNewUserName('')
                 }}
               >
-                <SelectTrigger>
+                <SelectTrigger id="assign-baker-select">
                   <SelectValue placeholder="Select team member" />
                 </SelectTrigger>
                 <SelectContent>
@@ -155,9 +158,12 @@ export function AssignBakerDialog({
             )}
 
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span>or add a new member:</span>
+              <Label htmlFor="assign-new-member" className="text-xs text-muted-foreground">
+                or add a new member:
+              </Label>
             </div>
             <Input
+              id="assign-new-member"
               placeholder="New member name"
               value={newUserName}
               onChange={(e) => {
@@ -171,12 +177,14 @@ export function AssignBakerDialog({
 
           {/* Cake day override */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Cake Day</label>
+            <Label htmlFor="assign-cake-day" className="text-sm font-medium">
+              Cake Day
+            </Label>
             <Select
               value={String(cakeDay)}
               onValueChange={(v) => setCakeDay(Number(v) as DayOfWeek)}
             >
-              <SelectTrigger>
+              <SelectTrigger id="assign-cake-day">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -199,13 +207,14 @@ export function AssignBakerDialog({
 
           {/* Cake name / theme */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">
+            <Label htmlFor="assign-cake-name" className="text-sm font-medium">
               Cake Theme{' '}
               <span className="text-muted-foreground font-normal">
                 (optional)
               </span>
-            </label>
+            </Label>
             <Input
+              id="assign-cake-name"
               placeholder="e.g., Chocolate Lava, Space Theme..."
               value={cakeName}
               onChange={(e) => setCakeName(e.target.value)}

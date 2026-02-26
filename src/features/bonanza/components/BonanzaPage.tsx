@@ -248,8 +248,10 @@ export function Component() {
                     size="icon"
                     className="h-7 w-7"
                     onClick={() => setViewMode('calendar')}
+                    aria-label="Calendar view"
+                    aria-pressed={viewMode === 'calendar'}
                   >
-                    <Calendar className="h-3.5 w-3.5" />
+                    <Calendar className="h-3.5 w-3.5" aria-hidden />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>Calendar view</TooltipContent>
@@ -261,8 +263,10 @@ export function Component() {
                     size="icon"
                     className="h-7 w-7"
                     onClick={() => setViewMode('list')}
+                    aria-label="List view"
+                    aria-pressed={viewMode === 'list'}
                   >
-                    <LayoutList className="h-3.5 w-3.5" />
+                    <LayoutList className="h-3.5 w-3.5" aria-hidden />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>List view</TooltipContent>
@@ -450,8 +454,9 @@ function PeriodView({
                   variant="outline"
                   onClick={onDelete}
                   className="text-destructive hover:text-destructive"
+                  aria-label="Delete period"
                 >
-                  <Trash2 className="h-3.5 w-3.5" />
+                  <Trash2 className="h-3.5 w-3.5" aria-hidden />
                 </Button>
               </div>
             )}
@@ -609,8 +614,9 @@ function ListView({
                       size="icon"
                       className="h-8 w-8 shrink-0"
                       onClick={() => onAssignBaker(assignment.weekStartDate)}
+                      aria-label={`Assign baker for week of ${weekDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}`}
                     >
-                      <ChefHat className="h-3.5 w-3.5 text-primary" />
+                      <ChefHat className="h-3.5 w-3.5 text-primary" aria-hidden />
                     </Button>
                   )}
                   {user && (
@@ -621,8 +627,9 @@ function ListView({
                       onClick={() =>
                         onRemoveAssignment(assignment.weekStartDate)
                       }
+                      aria-label={`Unassign baker for week of ${weekDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}`}
                     >
-                      <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                      <Trash2 className="h-3.5 w-3.5 text-destructive" aria-hidden />
                     </Button>
                   )}
                 </div>

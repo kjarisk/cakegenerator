@@ -58,12 +58,12 @@ export function Component() {
 
   if (error || !data?.concept) {
     return (
-      <div className="min-h-svh bg-background">
+      <main className="min-h-svh bg-background">
         <div className="mx-auto max-w-3xl px-4 py-8">
           <SharedHeader />
-          <Card className="mt-8">
+          <Card className="mt-8" role="alert">
             <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
-              <XCircle className="h-12 w-12 text-destructive/50" />
+              <XCircle className="h-12 w-12 text-destructive/50" aria-hidden />
               <h2 className="font-display text-lg font-bold">
                 Share link not found
               </h2>
@@ -73,7 +73,7 @@ export function Component() {
             </CardContent>
           </Card>
         </div>
-      </div>
+      </main>
     )
   }
 
@@ -106,7 +106,7 @@ export function Component() {
   }
 
   return (
-    <div className="min-h-svh bg-background">
+    <main className="min-h-svh bg-background">
       <div className="mx-auto max-w-3xl px-4 py-8">
         <SharedHeader />
 
@@ -268,7 +268,7 @@ export function Component() {
           </Card>
         </div>
       </div>
-    </div>
+    </main>
   )
 }
 
@@ -289,8 +289,8 @@ function SharedHeader() {
 function ApprovalBanner({ status }: { status: string }) {
   if (status === 'approved') {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-success/30 bg-success/10 p-3">
-        <CheckCircle2 className="h-5 w-5 text-success" />
+      <div role="status" className="flex items-center gap-2 rounded-lg border border-success/30 bg-success/10 p-3">
+        <CheckCircle2 className="h-5 w-5 text-success" aria-hidden />
         <span className="text-sm font-medium text-success">Approved</span>
       </div>
     )
@@ -298,8 +298,8 @@ function ApprovalBanner({ status }: { status: string }) {
 
   if (status === 'rejected') {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 p-3">
-        <XCircle className="h-5 w-5 text-destructive" />
+      <div role="status" className="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 p-3">
+        <XCircle className="h-5 w-5 text-destructive" aria-hidden />
         <span className="text-sm font-medium text-destructive">
           Changes Requested
         </span>
@@ -418,7 +418,7 @@ function CommentForm({
 
 function SharedPageSkeleton() {
   return (
-    <div className="min-h-svh bg-background">
+    <main className="min-h-svh bg-background" aria-busy="true" aria-label="Loading shared concept">
       <div className="mx-auto max-w-3xl px-4 py-8">
         <SharedHeader />
         <div className="mt-6 flex flex-col gap-6">
@@ -428,6 +428,6 @@ function SharedPageSkeleton() {
           <Skeleton className="h-40 w-full rounded-lg" />
         </div>
       </div>
-    </div>
+    </main>
   )
 }

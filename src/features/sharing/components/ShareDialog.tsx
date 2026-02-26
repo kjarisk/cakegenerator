@@ -79,14 +79,19 @@ export function ShareDialog({
 
         {shareUrl ? (
           <div className="space-y-3">
-            <Label>Share Link</Label>
+            <Label htmlFor="share-link-input">Share Link</Label>
             <div className="flex gap-2">
-              <Input value={shareUrl} readOnly className="text-sm" />
-              <Button variant="outline" size="icon" onClick={handleCopy}>
+              <Input id="share-link-input" value={shareUrl} readOnly className="text-sm" />
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleCopy}
+                aria-label={copied ? 'Copied!' : 'Copy link'}
+              >
                 {copied ? (
-                  <Check className="h-4 w-4 text-green-500" />
+                  <Check className="h-4 w-4 text-green-500" aria-hidden />
                 ) : (
-                  <Copy className="h-4 w-4" />
+                  <Copy className="h-4 w-4" aria-hidden />
                 )}
               </Button>
             </div>

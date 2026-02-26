@@ -90,7 +90,30 @@
 
 ### Phase 3b — Remaining polish
 
-- [ ] Accessibility pass (keyboard/focus, labels)
-- [ ] Performance quick pass (avoid unnecessary rerenders)
-- [ ] UX polish (empty states, toasts)
-- [ ] Final cleanup + docs
+- [x] Accessibility pass (keyboard/focus, labels)
+  - `aria-hidden` on all decorative icons/blobs across all pages
+  - `role="alert"` on all error states; `aria-busy` + `aria-label` on all skeletons/loading states
+  - `role="status"` on approval banners (SharePage); `role="alert"` on non-Friday Bonanza warning (HypeBanner)
+  - Proper `<Label htmlFor>` + `id` linkage in AssignBakerDialog and ShareDialog
+  - `aria-label` on all icon-only buttons (copy, remove, assign, unassign, nav prev/next)
+  - `aria-pressed` on view-toggle buttons (BonanzaPage list/calendar)
+  - `aria-current` on active category nav items (CakeBankPage)
+  - `aria-label="Sidebar"` on `<aside>`, `aria-label="Main navigation"` on `<nav>` (deduplicated)
+  - `<div>` → `<main>` for all three SharePage render states
+  - `role="row" aria-hidden` on CalendarView day-of-week header row
+- [x] Performance quick pass (avoid unnecessary rerenders)
+  - Fixed `useCallback` dep array bug in CakeBankPage (`handleRemoveFromBank`)
+  - Changed `ConceptCard.onRemove` prop type to `(id: string) => void` — stable callback, no inline arrow in map
+- [x] UX polish (empty states, toasts)
+  - `?theme=` query param pre-fill wired into CreateRequestPage via `useSearchParams` (homepage chips now work end-to-end)
+  - Verified all error/loading/empty states exist; all mutation actions have `toast.success` / `toast.error`
+- [x] CreateRequestPage full redesign
+  - Full-bleed hero section with floating orbs + animated cake emojis (`animate-float`)
+  - Prompt textarea inside the hero; 5 one-click inspiration chips pre-fill textarea
+  - `PillOption` components replace all `Select` dropdowns (skill level, budget range, cake style)
+  - Stepper buttons (+/−) for servings with contextual label ("Mega event 🎉" at high counts)
+  - Dietary toggles as colorful emoji chips with `--success` active state
+  - Numbered concept count buttons (1–5) with scale animation
+  - Animated shimmer CTA: `primary → accent → warm` gradient with `animate-gradient-shift`; shows count dynamically
+  - Bundle chunk shrank from 19.88 kB → 14.10 kB (dropped unused shadcn Select/Slider/Checkbox)
+- [x] Final cleanup + docs

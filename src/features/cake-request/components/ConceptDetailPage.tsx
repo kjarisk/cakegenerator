@@ -75,7 +75,7 @@ export function Component() {
 
   if (error || !concept) {
     return (
-      <div className="flex flex-col items-center gap-4 py-16 text-center">
+      <div role="alert" className="flex flex-col items-center gap-4 py-16 text-center">
         <h2 className="text-xl font-bold">Concept not found</h2>
         <p className="text-muted-foreground">
           This cake concept doesn&apos;t exist or has been removed.
@@ -319,8 +319,8 @@ export function Component() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {concept.recipe.ingredients.map((ing, i) => (
-                          <TableRow key={i}>
+                        {concept.recipe.ingredients.map((ing) => (
+                          <TableRow key={ing.name}>
                             <TableCell className="font-medium">
                               {ing.name}
                             </TableCell>
@@ -496,8 +496,8 @@ export function Component() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {concept.extras.themeAddons.map((addon, i) => (
-                          <TableRow key={i}>
+                        {concept.extras.themeAddons.map((addon) => (
+                          <TableRow key={addon.itemName}>
                             <TableCell className="font-medium">
                               {addon.itemName}
                             </TableCell>
@@ -551,7 +551,7 @@ export function Component() {
 
 function ConceptSkeleton() {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6" aria-busy="true" aria-label="Loading concept">
       <div>
         <Skeleton className="mb-2 h-4 w-16" />
         <Skeleton className="h-8 w-64" />

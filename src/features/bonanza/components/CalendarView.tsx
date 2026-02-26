@@ -199,16 +199,18 @@ export function CalendarView({
             size="icon"
             className="h-8 w-8"
             onClick={goToPrevMonth}
+            aria-label="Previous month"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-4 w-4" aria-hidden />
           </Button>
           <Button
             variant="ghost"
             size="icon"
             className="h-8 w-8"
             onClick={goToNextMonth}
+            aria-label="Next month"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-4 w-4" aria-hidden />
           </Button>
         </div>
       </div>
@@ -216,7 +218,7 @@ export function CalendarView({
       {/* Calendar grid */}
       <div className="rounded-lg border border-border overflow-hidden">
         {/* Day-of-week headers */}
-        <div className="grid grid-cols-7 bg-muted/50">
+        <div className="grid grid-cols-7 bg-muted/50" role="row" aria-hidden>
           {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
             <div
               key={day}
@@ -293,7 +295,7 @@ export function CalendarView({
 
                     {/* Cake day marker */}
                     {day.isCakeDay && day.isCurrentMonth && (
-                      <div className="absolute top-1 right-1">
+                      <div className="absolute top-1 right-1" aria-hidden>
                         <Cake className="h-3.5 w-3.5 text-warm" />
                       </div>
                     )}
@@ -317,7 +319,7 @@ export function CalendarView({
                                     .filter(Boolean)
                                     .join(' ')}
                                 >
-                                  <ChefHat className="h-3 w-3 shrink-0" />
+                                  <ChefHat className="h-3 w-3 shrink-0" aria-hidden />
                                   <span className="truncate">
                                     {weekUser.displayName}
                                   </span>
@@ -346,7 +348,7 @@ export function CalendarView({
                             {/* Non-Friday badge */}
                             {isNotFriday && (
                               <div className="flex items-center gap-0.5 text-[10px] text-warm font-medium">
-                                <AlertTriangle className="h-2.5 w-2.5" />
+                                <AlertTriangle className="h-2.5 w-2.5" aria-hidden />
                                 <span>{DAY_NAMES[cakeDay as DayOfWeek]}</span>
                               </div>
                             )}
@@ -380,10 +382,11 @@ export function CalendarView({
                               !isCurrentWeekRow &&
                               weekAssignment?.rating &&
                               weekAssignment.rating > 0 && (
-                                <div className="flex items-center gap-0.5">
+                                <div className="flex items-center gap-0.5" aria-label={`Rated ${weekAssignment.rating} out of 5 stars`}>
                                   {[1, 2, 3, 4, 5].map((s) => (
                                     <Star
                                       key={s}
+                                      aria-hidden
                                       className={`h-2.5 w-2.5 ${s <= (weekAssignment.rating ?? 0) ? 'fill-warm text-warm' : 'fill-transparent text-muted-foreground/30'}`}
                                     />
                                   ))}
@@ -393,7 +396,7 @@ export function CalendarView({
                         ) : isUnassigned ? (
                           <div className="mt-1">
                             <div className="flex items-center gap-1 rounded-md bg-muted/50 px-1.5 py-0.5 text-[11px] text-muted-foreground leading-tight">
-                              <UserPlus className="h-3 w-3 shrink-0 opacity-50" />
+                              <UserPlus className="h-3 w-3 shrink-0 opacity-50" aria-hidden />
                               <span className="italic opacity-60">
                                 Unassigned
                               </span>
@@ -417,12 +420,13 @@ export function CalendarView({
                             variant="ghost"
                             size="icon"
                             className="h-6 w-6 bg-background/80 backdrop-blur-sm shadow-sm"
+                            aria-label={`Re-assign baker for week of ${weekAssignment ? new Date(weekAssignment.weekStartDate + 'T00:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : ''}`}
                             onClick={() =>
                               weekAssignment &&
                               onAssignBaker(weekAssignment.weekStartDate)
                             }
                           >
-                            <ChefHat className="h-3 w-3 text-primary" />
+                            <ChefHat className="h-3 w-3 text-primary" aria-hidden />
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>Re-assign baker</TooltipContent>
@@ -433,12 +437,13 @@ export function CalendarView({
                             variant="ghost"
                             size="icon"
                             className="h-6 w-6 bg-background/80 backdrop-blur-sm shadow-sm"
+                            aria-label={`Unassign baker for week of ${weekAssignment ? new Date(weekAssignment.weekStartDate + 'T00:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : ''}`}
                             onClick={() =>
                               weekAssignment &&
                               onRemoveAssignment(weekAssignment.weekStartDate)
                             }
                           >
-                            <Trash2 className="h-3 w-3 text-destructive" />
+                            <Trash2 className="h-3 w-3 text-destructive" aria-hidden />
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>Unassign baker</TooltipContent>
@@ -451,11 +456,12 @@ export function CalendarView({
                           variant="ghost"
                           size="icon"
                           className="h-6 w-6 bg-background/80 backdrop-blur-sm shadow-sm"
+                          aria-label={`Assign baker for week of ${new Date(weekAssignment.weekStartDate + 'T00:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}`}
                           onClick={() =>
                             onAssignBaker(weekAssignment.weekStartDate)
                           }
                         >
-                          <UserPlus className="h-3 w-3 text-primary" />
+                          <UserPlus className="h-3 w-3 text-primary" aria-hidden />
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent>Assign baker</TooltipContent>
@@ -469,7 +475,7 @@ export function CalendarView({
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground px-1">
+      <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground px-1" aria-hidden>
         <div className="flex items-center gap-1.5">
           <span className="inline-block h-2.5 w-2.5 rounded-full bg-primary" />
           Today
@@ -541,7 +547,7 @@ function UpcomingAssignments({
               variant={isNow ? 'default' : 'secondary'}
               className="gap-1.5 py-1"
             >
-              <ChefHat className="h-3 w-3" />
+              <ChefHat className="h-3 w-3" aria-hidden />
               <span>{user?.displayName || 'Unknown'}</span>
               <span className="opacity-60">
                 {ws.toLocaleDateString(undefined, {
@@ -557,7 +563,7 @@ function UpcomingAssignments({
               {isNow && <span className="text-[10px] opacity-75">Now</span>}
               {a.rating && a.rating > 0 && (
                 <span className="flex items-center gap-0.5 text-[10px]">
-                  <Star className="h-2.5 w-2.5 fill-warm text-warm" />
+                  <Star className="h-2.5 w-2.5 fill-warm text-warm" aria-hidden />
                   {a.rating}
                 </span>
               )}

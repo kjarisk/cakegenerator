@@ -45,6 +45,11 @@ Keep this short: what we decided, and why.
 - 2026-02-26: Week-start standardized to Monday across all bonanza code (fixed prior Sunday-start inconsistency).
 - 2026-02-26: `removeAssignment` now unassigns baker (sets `userId: ''`) rather than deleting the week entry, since weeks are pre-generated as part of the period.
 
+- 2026-02-26: CreateRequestPage fully redesigned — full-bleed hero, pill selectors (no dropdowns), stepper servings, dietary emoji chips, animated shimmer CTA. Dropped unused shadcn Select/Slider/Checkbox, shrinking chunk by ~30%.
+- 2026-02-26: `?theme=` query param wired into CreateRequestPage via `useSearchParams` — homepage inspiration chips now pre-fill the prompt end-to-end.
+- 2026-02-26: Accessibility pass — `aria-hidden` on all decorative elements, `role="alert"` on errors, `aria-busy` on skeletons, `aria-pressed` on toggles, `aria-current` on nav, `<main>` landmark on SharePage, proper `<Label>` linkage throughout.
+- 2026-02-26: Performance pass — fixed `useCallback` missing dep (`handleRemoveFromBank`); `ConceptCard.onRemove` now `(id: string) => void` to avoid inline arrow allocations in map.
+
 ## UI system choice (per project)
 
 - Default: shadcn/ui
