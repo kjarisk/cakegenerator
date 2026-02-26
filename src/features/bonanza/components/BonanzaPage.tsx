@@ -131,7 +131,7 @@ export function Component() {
   return (
     <div className="flex flex-col gap-6">
       {/* Page header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <Calendar className="h-6 w-6 text-chart-4" />
@@ -254,7 +254,7 @@ function ScheduleView({
       {/* Schedule info */}
       <Card>
         <CardHeader>
-          <div className="flex items-start justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <CardTitle className="text-lg">{schedule.teamName}</CardTitle>
               <CardDescription>

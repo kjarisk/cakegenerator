@@ -137,7 +137,7 @@ export function Component() {
                 {concept.description}
               </p>
               <Separator className="my-4" />
-              <div className="flex gap-6 text-sm">
+              <div className="flex flex-wrap gap-4 text-sm sm:gap-6">
                 <div className="flex items-center gap-1.5 text-muted-foreground">
                   <Clock className="h-4 w-4" />
                   <span>{concept.recipe.timeEstimateMinutes} min</span>
@@ -162,7 +162,7 @@ export function Component() {
               <CardTitle className="text-base">Estimated Cost</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-baseline gap-2">
+              <div className="flex flex-wrap items-baseline gap-2">
                 <span className="text-2xl font-bold text-accent">
                   ${concept.shoppingPlan.totalEstimatedCost.toFixed(2)}
                 </span>
@@ -188,11 +188,11 @@ export function Component() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="flex gap-3">
+                <div className="flex flex-wrap gap-3">
                   <Button
                     onClick={handleApprove}
                     disabled={approvalMutation.isPending}
-                    className="bg-green-600 hover:bg-green-700"
+                    className="bg-green-600 hover:bg-green-700 shadow-[0_0_12px_oklch(0.6_0.2_145_/_0.2)]"
                   >
                     <CheckCircle2 className="mr-1.5 h-4 w-4" />
                     Approve
@@ -201,6 +201,7 @@ export function Component() {
                     variant="outline"
                     onClick={handleReject}
                     disabled={approvalMutation.isPending}
+                    className="hover:border-destructive/40"
                   >
                     <XCircle className="mr-1.5 h-4 w-4" />
                     Request Changes

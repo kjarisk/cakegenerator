@@ -209,7 +209,7 @@ export function CalendarView({
                 className={[
                   'grid grid-cols-7 border-t border-border',
                   isCurrentWeekRow
-                    ? 'bg-accent/8 ring-1 ring-inset ring-accent/20'
+                    ? 'bg-accent/10 ring-1 ring-inset ring-accent/30 shadow-glow-sm'
                     : '',
                 ]
                   .filter(Boolean)
@@ -222,6 +222,9 @@ export function CalendarView({
                       'relative min-h-[72px] px-2 py-1.5 transition-colors',
                       di < 6 ? 'border-r border-border' : '',
                       !day.isCurrentMonth ? 'opacity-35' : '',
+                      day.assignment && day.isCurrentMonth && !isCurrentWeekRow
+                        ? 'bg-primary/[0.03]'
+                        : '',
                     ]
                       .filter(Boolean)
                       .join(' ')}
@@ -311,8 +314,8 @@ export function CalendarView({
                 ))}
               </div>
 
-              {/* Week row hover actions */}
-              <div className="absolute right-2 top-1/2 -translate-y-1/2 hidden group-hover:flex items-center gap-1">
+              {/* Week row hover actions (always visible on mobile, hover on desktop) */}
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex md:hidden md:group-hover:flex items-center gap-1">
                 {weekAssignment ? (
                   <Tooltip>
                     <TooltipTrigger asChild>
