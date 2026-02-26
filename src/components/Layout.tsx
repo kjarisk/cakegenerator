@@ -1,6 +1,15 @@
 import { NavLink, Outlet } from 'react-router'
-import { Cake, Home, Library, Plus, Calendar, Sparkles } from 'lucide-react'
+import {
+  Cake,
+  Home,
+  Library,
+  Plus,
+  Calendar,
+  Sparkles,
+  Zap,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { aiMode } from '@/lib/ai-service'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
@@ -73,9 +82,20 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
 
       {/* Footer */}
       <div className="border-t border-sidebar-border/50 p-4">
-        <p className="text-[10px] text-muted-foreground/50">
-          CakeGen v1 — localStorage
-        </p>
+        <div className="flex items-center justify-between">
+          <p className="text-[10px] text-muted-foreground/50">CakeGen v1</p>
+          <span
+            className={cn(
+              'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium',
+              aiMode === 'live'
+                ? 'bg-emerald-500/15 text-emerald-400'
+                : 'bg-muted text-muted-foreground/60'
+            )}
+          >
+            <Zap className="h-2.5 w-2.5" />
+            AI: {aiMode === 'live' ? 'Live' : 'Mock'}
+          </span>
+        </div>
       </div>
     </div>
   )

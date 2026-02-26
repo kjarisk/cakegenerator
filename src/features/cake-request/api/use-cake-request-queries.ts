@@ -6,8 +6,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import type { CakeRequest, CakeConcept } from '@/lib/types'
 import type { CreateCakeRequestInput } from '@/lib/schemas'
 import * as storage from '@/lib/storage'
-import { generateCakeConcepts, regenerateConcept } from '@/lib/mock-ai'
-import type { RegenerateMode } from '@/lib/mock-ai'
+import { generateCakeConcepts, regenerateConcept } from '@/lib/ai-service'
+import type { RegenerateMode } from '@/lib/ai-service'
 
 // --- Query keys ---
 

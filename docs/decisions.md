@@ -21,6 +21,12 @@ Keep this short: what we decided, and why.
 - 2026-02-26: Bonanza calendar view as default view for weekly schedule visibility.
 - 2026-02-26: 1–5 star rating on bonanza assignments — rate after the week is done, stored on the assignment object.
 - 2026-02-26: GitHub Pages deployment via GitHub Actions (project site at /cakegenerator/).
+- 2026-02-26: OpenAI integration: GPT-4o for text/recipes, DALL-E 3 for concept images.
+- 2026-02-26: AI dispatcher pattern — `ai-service.ts` routes to real OpenAI or mock based on `VITE_OPENAI_API_KEY` presence.
+- 2026-02-26: API key via `VITE_OPENAI_API_KEY` in `.env.local` — local dev only, mock fallback in production/CI.
+- 2026-02-26: DALL-E 3 temporary URLs accepted in v1 — graceful fallback via `CakeImage` component when expired.
+- 2026-02-26: JSON mode (`response_format: { type: "json_object" }`) for structured GPT-4o output — no zodResponseFormat due to Zod v4 compatibility.
+- 2026-02-26: Prompt templates isolated in `ai-prompts.ts` for easy iteration without touching API logic.
 
 ## UI system choice (per project)
 

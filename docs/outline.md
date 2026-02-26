@@ -35,6 +35,9 @@ A lightweight team app that turns a customer’s theme request into one or more 
 2. **Generate cake concept(s)**
    - For each concept: recipe (ingredients + steps), equipment list, time estimate, difficulty, and a generated cake image.
    - Option to regenerate: whole concept or only parts (image only / recipe only / decorations only).
+   - AI backend: GPT-4o for text/recipes, DALL-E 3 for concept images.
+   - Dispatcher pattern: real AI when `VITE_OPENAI_API_KEY` is set in `.env.local`, mock data otherwise.
+   - Graceful image fallback when DALL-E URLs expire.
 3. **Cost & shopping suggestions**
    - Suggest where to buy ingredients (store picks) and estimate per-ingredient + total cost.
    - Suggest extra theme items (decorations: balloons, toppers, candles, plates, confetti, etc.) + estimated cost.
@@ -164,6 +167,7 @@ A lightweight team app that turns a customer’s theme request into one or more 
 
 - [ ] Create Cake Request with constraints and number of concepts
 - [ ] Generate cake concept(s): recipe + image + extras suggestions
+- [x] AI integration: GPT-4o for recipes/text, DALL-E 3 for images, with mock fallback
 - [ ] Regenerate (full concept OR recipe-only OR image-only)
 - [ ] Shopping plan: store suggestions + per-ingredient estimated prices + totals
 - [ ] Save cake concept to Cake Bank under Theme Categories + tags

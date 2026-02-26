@@ -26,6 +26,7 @@ import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { CakeImage } from '@/components/CakeImage'
 import {
   Form,
   FormControl,
@@ -113,7 +114,7 @@ export function Component() {
 
           {/* Concept image */}
           <Card className="overflow-hidden">
-            <img
+            <CakeImage
               src={concept.image.imageUrl}
               alt={concept.title}
               className="aspect-video w-full object-cover"

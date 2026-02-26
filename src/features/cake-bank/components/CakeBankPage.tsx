@@ -24,6 +24,7 @@ import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { CakeImage } from '@/components/CakeImage'
 
 import {
   useThemeCategoriesQuery,
@@ -253,7 +254,7 @@ function ConceptCard({
     <Card className="group overflow-hidden hover-glow transition-all duration-200">
       <Link to={`/concepts/${concept.id}`}>
         <div className="relative aspect-[4/3] overflow-hidden">
-          <img
+          <CakeImage
             src={concept.image.imageUrl}
             alt={concept.title}
             className="h-full w-full object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"

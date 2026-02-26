@@ -28,6 +28,7 @@ import { useRemoveConceptFromBankMutation } from '@/features/cake-bank/api/use-c
 import { SaveToBankDialog } from '@/features/cake-bank/components/SaveToBankDialog'
 import { ShareDialog } from '@/features/sharing/components/ShareDialog'
 
+import { CakeImage } from '@/components/CakeImage'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -54,7 +55,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import type { RegenerateMode } from '@/lib/mock-ai'
+import type { RegenerateMode } from '@/lib/ai-service'
 
 export function Component() {
   const { id } = useParams<{ id: string }>()
@@ -218,7 +219,7 @@ export function Component() {
         <div className="space-y-4">
           <Card className="overflow-hidden">
             <div className="relative">
-              <img
+              <CakeImage
                 src={concept.image.imageUrl}
                 alt={concept.title}
                 className="aspect-square w-full object-cover"

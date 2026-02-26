@@ -32,6 +32,19 @@
 - [ ] Bonanza calendar view (monthly grid with assignments)
 - [ ] Bonanza cake rating (1–5 stars per week, list + calendar views)
 
+## Phase 2.5 — AI Integration (OpenAI)
+
+- [x] Install `openai` SDK, set up `.env.local` with `VITE_OPENAI_API_KEY`
+- [x] Create OpenAI client (`openai-client.ts`) — lazy init, `dangerouslyAllowBrowser` for local dev
+- [x] Create prompt templates (`ai-prompts.ts`) — system prompts + prompt builders for GPT-4o and DALL-E 3
+- [x] Create real AI service (`openai-ai.ts`) — GPT-4o JSON mode for recipes/text, DALL-E 3 for images
+- [x] Create dispatcher (`ai-service.ts`) — routes to real OpenAI or mock based on env
+- [x] Update consuming code to import from dispatcher instead of mock-ai
+- [x] Add `CakeImage` component with DALL-E URL expiry fallback
+- [x] Add AI status indicator in sidebar (Live / Mock badge)
+- [x] Add tests for prompt templates + dispatcher
+- [x] Update docs (decisions.md, QUICKSTART.md, outline.md, plan.md)
+
 ## Phase 3 — Polish + hardening
 
 - [ ] Accessibility pass (keyboard/focus, labels)
