@@ -5,7 +5,7 @@ import { resolve } from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/cakegenerator/',
+  base: '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
