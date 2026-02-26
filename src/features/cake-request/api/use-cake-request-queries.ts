@@ -6,7 +6,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import type { CakeRequest, CakeConcept } from '@/lib/types'
 import type { CreateCakeRequestInput } from '@/lib/schemas'
 import * as storage from '@/lib/storage'
-import { generateCakeConcepts } from '@/lib/mock-ai'
+import { generateCakeConcepts, regenerateConcept } from '@/lib/mock-ai'
+import type { RegenerateMode } from '@/lib/mock-ai'
 
 // --- Query keys ---
 
@@ -122,6 +123,48 @@ export function useUpdateConceptMutation() {
       queryClient.invalidateQueries({ queryKey: cakeConceptKeys.all })
       queryClient.invalidateQueries({
         queryKey: cakeConceptKeys.detail(data.id),
+      })
+    },
+  })
+}
+
+export function useRegenerateConceptMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      concept,
+      mode,
+    }: {
+      concept: CakeConcept
+      mode: RegenerateMode
+    }) => {
+      // Fetch the original request for context (theme, servings, etc.)
+      const request = storage.getById<CakeRequest>(
+        'cakeRequests',
+        concept.requestId
+      )
+      if (!request) throw new Error('Original request not found')
+
+      // Generate new content based on mode
+      const updates = await regenerateConcept(concept, request, mode)
+
+      // Persist the updates
+      const updated = storage.update<CakeConcept>(
+        'cakeConcepts',
+        concept.id,
+        updates
+      )
+      if (!updated) throw new Error('Concept not found')
+      return { updated, mode }
+    },
+    onSuccess: ({ updated }) => {
+      queryClient.invalidateQueries({ queryKey: cakeConceptKeys.all })
+      queryClient.invalidateQueries({
+        queryKey: cakeConceptKeys.detail(updated.id),
+      })
+      queryClient.invalidateQueries({
+        queryKey: cakeRequestKeys.concepts(updated.requestId),
       })
     },
   })

@@ -369,3 +369,92 @@ export async function generateCakeConcepts(
 
   return concepts
 }
+
+// --- Regeneration types ---
+
+export type RegenerateMode = 'full' | 'recipe' | 'image'
+
+// --- Regeneration functions ---
+
+/**
+ * Regenerate an entire concept (new recipe, image, shopping plan, extras).
+ * Keeps the same id, requestId, savedToBank, and notes.
+ */
+export async function regenerateFullConcept(
+  _existing: CakeConcept,
+  request: CakeRequest
+): Promise<Partial<CakeConcept>> {
+  await delay(1500 + Math.random() * 2000)
+
+  const theme = request.customerPrompt
+  const titleTemplate =
+    MOCK_TITLES[Math.floor(Math.random() * MOCK_TITLES.length)]
+  const descTemplate =
+    MOCK_DESCRIPTIONS[Math.floor(Math.random() * MOCK_DESCRIPTIONS.length)]
+  const recipe = generateMockRecipe(request.constraints.servings)
+
+  return {
+    title: titleTemplate.replace('{theme}', theme),
+    description: descTemplate.replace(/{theme}/g, theme),
+    themeTags: [
+      theme.toLowerCase(),
+      request.constraints.preferredStyle,
+      request.constraints.budgetRange + ' budget',
+    ],
+    recipe,
+    image: generateMockImage(theme),
+    shoppingPlan: generateMockShoppingPlan(recipe.ingredients),
+    extras: generateMockExtras(theme),
+  }
+}
+
+/**
+ * Regenerate only the recipe (ingredients, steps, time, difficulty, equipment)
+ * and update shopping plan to match the new ingredients.
+ */
+export async function regenerateRecipeOnly(
+  _existing: CakeConcept,
+  request: CakeRequest
+): Promise<Partial<CakeConcept>> {
+  await delay(1000 + Math.random() * 1500)
+
+  const recipe = generateMockRecipe(request.constraints.servings)
+
+  return {
+    recipe,
+    shoppingPlan: generateMockShoppingPlan(recipe.ingredients),
+  }
+}
+
+/**
+ * Regenerate only the concept image.
+ */
+export async function regenerateImageOnly(
+  _existing: CakeConcept,
+  request: CakeRequest
+): Promise<Partial<CakeConcept>> {
+  await delay(800 + Math.random() * 1200)
+
+  const theme = request.customerPrompt
+  return {
+    image: generateMockImage(theme),
+  }
+}
+
+/**
+ * Dispatcher: regenerate a concept based on mode.
+ */
+export async function regenerateConcept(
+  existing: CakeConcept,
+  request: CakeRequest,
+  mode: RegenerateMode
+): Promise<Partial<CakeConcept>> {
+  switch (mode) {
+    case 'full':
+      return regenerateFullConcept(existing, request)
+    case 'recipe':
+      return regenerateRecipeOnly(existing, request)
+    case 'image':
+      return regenerateImageOnly(existing, request)
+  }
+}

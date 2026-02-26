@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router'
-import { Cake, Home, Library, Plus, Calendar } from 'lucide-react'
+import { Cake, Home, Library, Plus, Calendar, Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -19,9 +19,10 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <div className="flex h-full flex-col">
       {/* Logo */}
-      <div className="flex items-center gap-2 px-4 py-6">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground">
+      <div className="flex items-center gap-2.5 px-4 py-6">
+        <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground shadow-glow-accent">
           <Cake className="h-5 w-5" />
+          <Sparkles className="absolute -right-1 -top-1 h-3 w-3 text-accent animate-sparkle" />
         </div>
         <div>
           <h1 className="text-lg font-bold tracking-tight">CakeGen</h1>
@@ -31,7 +32,7 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
         </div>
       </div>
 
-      <Separator className="mb-2" />
+      <Separator className="mb-2 opacity-50" />
 
       {/* Nav links */}
       <ScrollArea className="flex-1 px-2">
@@ -44,23 +45,35 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
               onClick={onNavigate}
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
+                  'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
                   isActive
-                    ? 'bg-accent text-accent-foreground'
+                    ? 'bg-accent/15 text-accent shadow-glow-sm'
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 )
               }
             >
-              <item.icon className="h-4 w-4" />
-              {item.label}
+              {({ isActive }) => (
+                <>
+                  <item.icon
+                    className={cn(
+                      'h-4 w-4 transition-colors',
+                      isActive && 'text-accent'
+                    )}
+                  />
+                  {item.label}
+                  {isActive && (
+                    <span className="ml-auto h-1.5 w-1.5 rounded-full bg-accent" />
+                  )}
+                </>
+              )}
             </NavLink>
           ))}
         </nav>
       </ScrollArea>
 
       {/* Footer */}
-      <div className="border-t p-4">
-        <p className="text-[10px] text-muted-foreground/60">
+      <div className="border-t border-sidebar-border/50 p-4">
+        <p className="text-[10px] text-muted-foreground/50">
           CakeGen v1 — localStorage
         </p>
       </div>
@@ -74,13 +87,13 @@ export function Component() {
   return (
     <div className="dark flex min-h-svh bg-background">
       {/* Desktop sidebar */}
-      <aside className="hidden w-60 shrink-0 border-r border-sidebar-border bg-sidebar md:block">
+      <aside className="hidden w-60 shrink-0 border-r border-sidebar-border/60 bg-sidebar md:block">
         <NavContent />
       </aside>
 
       {/* Mobile header + sheet */}
       <div className="flex flex-1 flex-col">
-        <header className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b bg-background/80 px-4 backdrop-blur-sm md:hidden">
+        <header className="glass-strong sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-border/40 px-4 md:hidden">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="shrink-0">
@@ -93,7 +106,10 @@ export function Component() {
             </SheetContent>
           </Sheet>
           <div className="flex items-center gap-2">
-            <Cake className="h-5 w-5 text-accent" />
+            <div className="relative">
+              <Cake className="h-5 w-5 text-accent" />
+              <Sparkles className="absolute -right-1.5 -top-1.5 h-2.5 w-2.5 text-accent animate-sparkle" />
+            </div>
             <span className="font-bold">CakeGen</span>
           </div>
         </header>

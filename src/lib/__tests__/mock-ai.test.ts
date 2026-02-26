@@ -1,7 +1,13 @@
 /// <reference types="vitest/globals" />
 
-import { generateCakeConcepts } from '../mock-ai'
-import type { CakeRequest } from '../types'
+import {
+  generateCakeConcepts,
+  regenerateConcept,
+  regenerateFullConcept,
+  regenerateRecipeOnly,
+  regenerateImageOnly,
+} from '../mock-ai'
+import type { CakeRequest, CakeConcept } from '../types'
 
 // Speed up tests by removing the artificial delay
 vi.useFakeTimers()
@@ -202,5 +208,147 @@ describe('generateCakeConcepts', () => {
     // The URL-encoded SVG should contain halloween colors (#ff6600)
     const svg = decodeURIComponent(concept.image.imageUrl.split(',')[1])
     expect(svg).toContain('#ff6600')
+  })
+})
+
+// =============================================================================
+// Regeneration functions
+// =============================================================================
+
+// Helper to create a test concept (generated from a request)
+async function createTestConcept(
+  request?: CakeRequest
+): Promise<{ concept: CakeConcept; request: CakeRequest }> {
+  const req = request || createTestRequest({ numConcepts: 1 })
+  const promise = generateCakeConcepts(req)
+  await vi.advanceTimersByTimeAsync(4000)
+  const concepts = await promise
+  return { concept: concepts[0], request: req }
+}
+
+// Helper to run a regeneration with timer advancement
+async function runRegeneration<T>(promise: Promise<T>): Promise<T> {
+  await vi.advanceTimersByTimeAsync(5000)
+  return promise
+}
+
+describe('regenerateFullConcept', () => {
+  it('returns updated title, description, recipe, image, shopping plan, and extras', async () => {
+    const { concept, request } = await createTestConcept()
+    const updates = await runRegeneration(
+      regenerateFullConcept(concept, request)
+    )
+
+    expect(updates.title).toBeDefined()
+    expect(updates.description).toBeDefined()
+    expect(updates.recipe).toBeDefined()
+    expect(updates.image).toBeDefined()
+    expect(updates.shoppingPlan).toBeDefined()
+    expect(updates.extras).toBeDefined()
+    expect(updates.themeTags).toBeDefined()
+  })
+
+  it('does not include id or requestId in updates', async () => {
+    const { concept, request } = await createTestConcept()
+    const updates = await runRegeneration(
+      regenerateFullConcept(concept, request)
+    )
+
+    expect(updates).not.toHaveProperty('id')
+    expect(updates).not.toHaveProperty('requestId')
+    expect(updates).not.toHaveProperty('savedToBank')
+    expect(updates).not.toHaveProperty('notes')
+  })
+
+  it('uses the theme from the request', async () => {
+    const { concept, request } = await createTestConcept(
+      createTestRequest({ customerPrompt: 'Dinosaur' })
+    )
+    const updates = await runRegeneration(
+      regenerateFullConcept(concept, request)
+    )
+
+    expect(updates.title).toContain('Dinosaur')
+    expect(updates.description).toContain('Dinosaur')
+  })
+})
+
+describe('regenerateRecipeOnly', () => {
+  it('returns only recipe and shoppingPlan', async () => {
+    const { concept, request } = await createTestConcept()
+    const updates = await runRegeneration(
+      regenerateRecipeOnly(concept, request)
+    )
+
+    expect(updates.recipe).toBeDefined()
+    expect(updates.shoppingPlan).toBeDefined()
+    expect(updates).not.toHaveProperty('title')
+    expect(updates).not.toHaveProperty('image')
+    expect(updates).not.toHaveProperty('description')
+    expect(updates).not.toHaveProperty('extras')
+  })
+
+  it('recipe has ingredients and steps', async () => {
+    const { concept, request } = await createTestConcept()
+    const updates = await runRegeneration(
+      regenerateRecipeOnly(concept, request)
+    )
+
+    expect(updates.recipe!.ingredients.length).toBeGreaterThan(0)
+    expect(updates.recipe!.steps.length).toBeGreaterThan(0)
+  })
+})
+
+describe('regenerateImageOnly', () => {
+  it('returns only image', async () => {
+    const { concept, request } = await createTestConcept()
+    const updates = await runRegeneration(regenerateImageOnly(concept, request))
+
+    expect(updates.image).toBeDefined()
+    expect(updates).not.toHaveProperty('recipe')
+    expect(updates).not.toHaveProperty('title')
+    expect(updates).not.toHaveProperty('shoppingPlan')
+  })
+
+  it('image contains an SVG data URL', async () => {
+    const { concept, request } = await createTestConcept()
+    const updates = await runRegeneration(regenerateImageOnly(concept, request))
+
+    expect(updates.image!.imageUrl).toContain('data:image/svg+xml,')
+  })
+})
+
+describe('regenerateConcept dispatcher', () => {
+  it('dispatches full mode correctly', async () => {
+    const { concept, request } = await createTestConcept()
+    const updates = await runRegeneration(
+      regenerateConcept(concept, request, 'full')
+    )
+
+    expect(updates.title).toBeDefined()
+    expect(updates.recipe).toBeDefined()
+    expect(updates.image).toBeDefined()
+  })
+
+  it('dispatches recipe mode correctly', async () => {
+    const { concept, request } = await createTestConcept()
+    const updates = await runRegeneration(
+      regenerateConcept(concept, request, 'recipe')
+    )
+
+    expect(updates.recipe).toBeDefined()
+    expect(updates).not.toHaveProperty('title')
+    expect(updates).not.toHaveProperty('image')
+  })
+
+  it('dispatches image mode correctly', async () => {
+    const { concept, request } = await createTestConcept()
+    const updates = await runRegeneration(
+      regenerateConcept(concept, request, 'image')
+    )
+
+    expect(updates.image).toBeDefined()
+    expect(updates).not.toHaveProperty('recipe')
+    expect(updates).not.toHaveProperty('title')
   })
 })

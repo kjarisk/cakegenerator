@@ -7,6 +7,7 @@ import {
   Tag,
   Trash2,
   Cake,
+  Sparkles,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -249,19 +250,20 @@ function ConceptCard({
   onRemove: () => void
 }) {
   return (
-    <Card className="group overflow-hidden transition-colors hover:border-primary/40">
+    <Card className="group overflow-hidden hover-glow transition-all duration-200">
       <Link to={`/concepts/${concept.id}`}>
         <div className="relative aspect-[4/3] overflow-hidden">
           <img
             src={concept.image.imageUrl}
             alt={concept.title}
-            className="h-full w-full object-cover transition-transform group-hover:scale-105"
+            className="h-full w-full object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
           />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-card to-transparent" />
         </div>
       </Link>
       <CardHeader className="pb-2">
         <Link to={`/concepts/${concept.id}`}>
-          <CardTitle className="text-sm font-semibold leading-tight group-hover:text-primary transition-colors">
+          <CardTitle className="text-sm font-semibold leading-tight group-hover:text-accent transition-colors">
             {concept.title}
           </CardTitle>
         </Link>
@@ -345,7 +347,12 @@ function EmptyState({
   return (
     <Card>
       <CardContent className="flex flex-col items-center gap-4 py-12 text-center">
-        <Cake className="h-12 w-12 text-muted-foreground/50" />
+        <div className="relative">
+          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-accent/15 via-primary/10 to-chart-4/10 shadow-glow-sm">
+            <Cake className="h-10 w-10 text-accent/70" />
+          </div>
+          <Sparkles className="absolute -right-1 -top-1 h-4 w-4 text-accent animate-sparkle" />
+        </div>
         <div>
           <p className="text-lg font-medium">Your Cake Bank is empty</p>
           <p className="text-sm text-muted-foreground">
@@ -353,7 +360,10 @@ function EmptyState({
             collection.
           </p>
         </div>
-        <Button asChild className="bg-accent hover:bg-accent/90">
+        <Button
+          asChild
+          className="bg-accent hover:bg-accent/90 shadow-glow-accent"
+        >
           <Link to="/create">
             <Plus className="mr-2 h-4 w-4" />
             Generate Cake Concept

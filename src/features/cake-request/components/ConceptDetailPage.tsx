@@ -12,12 +12,17 @@ import {
   RefreshCw,
   Package,
   PartyPopper,
+  ImageIcon,
+  UtensilsCrossed,
+  ChevronDown,
+  Loader2,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
 import {
   useCakeConceptQuery,
   useConceptsByRequestQuery,
+  useRegenerateConceptMutation,
 } from '../api/use-cake-request-queries'
 import { useRemoveConceptFromBankMutation } from '@/features/cake-bank/api/use-cake-bank-queries'
 import { SaveToBankDialog } from '@/features/cake-bank/components/SaveToBankDialog'
@@ -43,6 +48,13 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import type { RegenerateMode } from '@/lib/mock-ai'
 
 export function Component() {
   const { id } = useParams<{ id: string }>()
@@ -52,6 +64,7 @@ export function Component() {
     concept?.requestId || ''
   )
   const removeFromBankMutation = useRemoveConceptFromBankMutation()
+  const regenerateMutation = useRegenerateConceptMutation()
   const [saveToBankOpen, setSaveToBankOpen] = useState(false)
   const [shareDialogOpen, setShareDialogOpen] = useState(false)
 
@@ -86,6 +99,22 @@ export function Component() {
     }
   }
 
+  const handleRegenerate = (mode: RegenerateMode) => {
+    const labels: Record<RegenerateMode, string> = {
+      full: 'full concept',
+      recipe: 'recipe',
+      image: 'image',
+    }
+    regenerateMutation.mutate(
+      { concept, mode },
+      {
+        onSuccess: () =>
+          toast.success(`Regenerated ${labels[mode]} successfully`),
+        onError: () => toast.error(`Failed to regenerate ${labels[mode]}`),
+      }
+    )
+  }
+
   return (
     <div className="flex flex-col gap-6">
       {/* Header */}
@@ -109,7 +138,7 @@ export function Component() {
             ))}
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button
             variant={concept.savedToBank ? 'default' : 'outline'}
             size="sm"
@@ -130,16 +159,45 @@ export function Component() {
             <Share2 className="mr-1 h-4 w-4" />
             Share
           </Button>
-          <Button variant="outline" size="sm" disabled>
-            <RefreshCw className="mr-1 h-4 w-4" />
-            Regenerate
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={regenerateMutation.isPending}
+              >
+                {regenerateMutation.isPending ? (
+                  <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                ) : (
+                  <RefreshCw className="mr-1 h-4 w-4" />
+                )}
+                {regenerateMutation.isPending
+                  ? 'Regenerating...'
+                  : 'Regenerate'}
+                <ChevronDown className="ml-1 h-3 w-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => handleRegenerate('full')}>
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Full Concept
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleRegenerate('recipe')}>
+                <UtensilsCrossed className="mr-2 h-4 w-4" />
+                Recipe Only
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleRegenerate('image')}>
+                <ImageIcon className="mr-2 h-4 w-4" />
+                Image Only
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
       {/* Sibling concepts navigation */}
       {siblingConcepts && siblingConcepts.length > 1 && (
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm text-muted-foreground">Other concepts:</span>
           {siblingConcepts.map((sibling, i) => (
             <Button
@@ -159,11 +217,14 @@ export function Component() {
         {/* Left: Image + Description */}
         <div className="space-y-4">
           <Card className="overflow-hidden">
-            <img
-              src={concept.image.imageUrl}
-              alt={concept.title}
-              className="aspect-square w-full object-cover"
-            />
+            <div className="relative">
+              <img
+                src={concept.image.imageUrl}
+                alt={concept.title}
+                className="aspect-square w-full object-cover"
+              />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-card to-transparent" />
+            </div>
           </Card>
 
           <Card>
@@ -179,9 +240,9 @@ export function Component() {
 
           {/* Quick stats */}
           <div className="grid grid-cols-3 gap-3">
-            <Card>
+            <Card className="border-chart-4/20">
               <CardContent className="flex flex-col items-center gap-1 pt-4 pb-3">
-                <Clock className="h-5 w-5 text-muted-foreground" />
+                <Clock className="h-5 w-5 text-chart-4" />
                 <span className="text-lg font-bold">
                   {concept.recipe.timeEstimateMinutes}m
                 </span>
@@ -190,9 +251,9 @@ export function Component() {
                 </span>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-primary/20">
               <CardContent className="flex flex-col items-center gap-1 pt-4 pb-3">
-                <Users className="h-5 w-5 text-muted-foreground" />
+                <Users className="h-5 w-5 text-primary" />
                 <span className="text-lg font-bold">
                   {concept.recipe.ingredients.length}
                 </span>
@@ -201,9 +262,9 @@ export function Component() {
                 </span>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-accent/20">
               <CardContent className="flex flex-col items-center gap-1 pt-4 pb-3">
-                <ChefHat className="h-5 w-5 text-muted-foreground" />
+                <ChefHat className="h-5 w-5 text-accent" />
                 <span className="text-lg font-bold capitalize">
                   {concept.recipe.difficulty}
                 </span>
@@ -241,30 +302,32 @@ export function Component() {
                   <CardTitle className="text-base">Ingredients</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Ingredient</TableHead>
-                        <TableHead>Amount</TableHead>
-                        <TableHead>Notes</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {concept.recipe.ingredients.map((ing, i) => (
-                        <TableRow key={i}>
-                          <TableCell className="font-medium">
-                            {ing.name}
-                          </TableCell>
-                          <TableCell>
-                            {ing.quantity} {ing.unit}
-                          </TableCell>
-                          <TableCell className="text-muted-foreground">
-                            {ing.notes || '—'}
-                          </TableCell>
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Ingredient</TableHead>
+                          <TableHead>Amount</TableHead>
+                          <TableHead>Notes</TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {concept.recipe.ingredients.map((ing, i) => (
+                          <TableRow key={i}>
+                            <TableCell className="font-medium">
+                              {ing.name}
+                            </TableCell>
+                            <TableCell>
+                              {ing.quantity} {ing.unit}
+                            </TableCell>
+                            <TableCell className="text-muted-foreground">
+                              {ing.notes || '—'}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
                 </CardContent>
               </Card>
 
@@ -335,44 +398,46 @@ export function Component() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Ingredient</TableHead>
-                        <TableHead>Budget</TableHead>
-                        <TableHead>Standard</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {concept.recipe.ingredients.map((ing) => {
-                        const budgetCost =
-                          concept.shoppingPlan.ingredientCosts.find(
-                            (c) =>
-                              c.ingredientName === ing.name &&
-                              c.storeType === 'budget'
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Ingredient</TableHead>
+                          <TableHead>Budget</TableHead>
+                          <TableHead>Standard</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {concept.recipe.ingredients.map((ing) => {
+                          const budgetCost =
+                            concept.shoppingPlan.ingredientCosts.find(
+                              (c) =>
+                                c.ingredientName === ing.name &&
+                                c.storeType === 'budget'
+                            )
+                          const stdCost =
+                            concept.shoppingPlan.ingredientCosts.find(
+                              (c) =>
+                                c.ingredientName === ing.name &&
+                                c.storeType === 'standard'
+                            )
+                          return (
+                            <TableRow key={ing.name}>
+                              <TableCell className="font-medium">
+                                {ing.name}
+                              </TableCell>
+                              <TableCell>
+                                ${budgetCost?.estimatedPrice.toFixed(2) || '—'}
+                              </TableCell>
+                              <TableCell>
+                                ${stdCost?.estimatedPrice.toFixed(2) || '—'}
+                              </TableCell>
+                            </TableRow>
                           )
-                        const stdCost =
-                          concept.shoppingPlan.ingredientCosts.find(
-                            (c) =>
-                              c.ingredientName === ing.name &&
-                              c.storeType === 'standard'
-                          )
-                        return (
-                          <TableRow key={ing.name}>
-                            <TableCell className="font-medium">
-                              {ing.name}
-                            </TableCell>
-                            <TableCell>
-                              ${budgetCost?.estimatedPrice.toFixed(2) || '—'}
-                            </TableCell>
-                            <TableCell>
-                              ${stdCost?.estimatedPrice.toFixed(2) || '—'}
-                            </TableCell>
-                          </TableRow>
-                        )
-                      })}
-                    </TableBody>
-                  </Table>
+                        })}
+                      </TableBody>
+                    </Table>
+                  </div>
                 </CardContent>
               </Card>
 
@@ -410,32 +475,34 @@ export function Component() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Item</TableHead>
-                        <TableHead>Est. Price</TableHead>
-                        <TableHead>Store</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {concept.extras.themeAddons.map((addon, i) => (
-                        <TableRow key={i}>
-                          <TableCell className="font-medium">
-                            {addon.itemName}
-                          </TableCell>
-                          <TableCell>
-                            ${addon.estimatedPrice.toFixed(2)}
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="outline" className="capitalize">
-                              {addon.storeSuggestion}
-                            </Badge>
-                          </TableCell>
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Item</TableHead>
+                          <TableHead>Est. Price</TableHead>
+                          <TableHead>Store</TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {concept.extras.themeAddons.map((addon, i) => (
+                          <TableRow key={i}>
+                            <TableCell className="font-medium">
+                              {addon.itemName}
+                            </TableCell>
+                            <TableCell>
+                              ${addon.estimatedPrice.toFixed(2)}
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="outline" className="capitalize">
+                                {addon.storeSuggestion}
+                              </Badge>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
                   <Separator className="my-4" />
                   <div className="flex justify-between">
                     <span className="font-medium">Total Extras</span>
