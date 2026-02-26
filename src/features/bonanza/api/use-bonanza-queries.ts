@@ -173,6 +173,48 @@ export function useRemoveAssignmentMutation() {
 
 // --- User Mutations ---
 
+export function useRateAssignmentMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      scheduleId,
+      weekStartDate,
+      rating,
+    }: {
+      scheduleId: string
+      weekStartDate: string
+      rating: number // 1–5
+    }) => {
+      const schedule = storage.getById<BonanzaSchedule>(
+        'bonanzaSchedules',
+        scheduleId
+      )
+      if (!schedule) throw new Error('Schedule not found')
+
+      const newAssignments = schedule.assignments.map((a) =>
+        a.weekStartDate === weekStartDate ? { ...a, rating } : a
+      )
+
+      const updated = storage.update<BonanzaSchedule>(
+        'bonanzaSchedules',
+        scheduleId,
+        { assignments: newAssignments }
+      )
+      if (!updated) throw new Error('Failed to update schedule')
+      return updated
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: bonanzaKeys.all })
+      queryClient.invalidateQueries({
+        queryKey: bonanzaKeys.detail(data.id),
+      })
+    },
+  })
+}
+
+// --- User Mutations (create user) ---
+
 export function useCreateUserMutation() {
   const queryClient = useQueryClient()
 

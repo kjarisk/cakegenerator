@@ -157,6 +157,7 @@ export interface BonanzaAssignment {
   userId: string
   themeCategoryId?: string
   cakeConceptId?: string
+  rating?: number // 1–5 stars, undefined = not yet rated
 }
 
 export interface BonanzaSchedule {

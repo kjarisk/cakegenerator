@@ -60,6 +60,7 @@ import {
   useDeleteBonanzaScheduleMutation,
   useAddAssignmentMutation,
   useRemoveAssignmentMutation,
+  useRateAssignmentMutation,
   useCreateUserMutation,
 } from '../api/use-bonanza-queries'
 import { useBonanzaStore } from '../state/bonanza-store'
@@ -68,6 +69,7 @@ import {
   type CreateBonanzaScheduleInput,
 } from '@/lib/schemas'
 import { CalendarView } from './CalendarView'
+import { StarRating } from './StarRating'
 import type { BonanzaSchedule, BonanzaAssignment, User } from '@/lib/types'
 
 export function Component() {
@@ -84,6 +86,7 @@ export function Component() {
   const { data: users } = useUsersQuery()
   const deleteMutation = useDeleteBonanzaScheduleMutation()
   const removeAssignmentMutation = useRemoveAssignmentMutation()
+  const rateAssignmentMutation = useRateAssignmentMutation()
 
   const activeSchedule = schedules?.[0]
 
@@ -105,6 +108,23 @@ export function Component() {
       toast.success('Assignment removed')
     } catch {
       toast.error('Failed to remove assignment')
+    }
+  }
+
+  const handleRateAssignment = async (
+    scheduleId: string,
+    weekStartDate: string,
+    rating: number
+  ) => {
+    try {
+      await rateAssignmentMutation.mutateAsync({
+        scheduleId,
+        weekStartDate,
+        rating,
+      })
+      toast.success(rating > 0 ? `Rated ${rating}/5 stars` : 'Rating cleared')
+    } catch {
+      toast.error('Failed to rate cake')
     }
   }
 
@@ -178,6 +198,9 @@ export function Component() {
           onRemoveAssignment={(weekStartDate) =>
             handleRemoveAssignment(activeSchedule.id, weekStartDate)
           }
+          onRateAssignment={(weekStartDate, rating) =>
+            handleRateAssignment(activeSchedule.id, weekStartDate, rating)
+          }
           onAddAssignment={() => setAddAssignmentOpen(true)}
         />
       ) : (
@@ -212,6 +235,7 @@ function ScheduleView({
   viewMode,
   onDelete,
   onRemoveAssignment,
+  onRateAssignment,
   onAddAssignment,
 }: {
   schedule: BonanzaSchedule
@@ -219,6 +243,7 @@ function ScheduleView({
   viewMode: 'list' | 'calendar'
   onDelete: () => void
   onRemoveAssignment: (weekStartDate: string) => void
+  onRateAssignment: (weekStartDate: string, rating: number) => void
   onAddAssignment: () => void
 }) {
   const userMap = new Map(users.map((u) => [u.id, u]))
@@ -261,6 +286,7 @@ function ScheduleView({
           assignments={schedule.assignments}
           users={users}
           onRemoveAssignment={onRemoveAssignment}
+          onRateAssignment={onRateAssignment}
           onAddAssignment={onAddAssignment}
         />
       ) : schedule.assignments.length === 0 ? (
@@ -324,6 +350,17 @@ function ScheduleView({
                       <ChefHat className="h-3.5 w-3.5" />
                       <span>{user?.displayName || 'Unknown user'}</span>
                     </div>
+                    {(isPast || isCurrentWeek) && (
+                      <div className="mt-1">
+                        <StarRating
+                          value={assignment.rating}
+                          onChange={(rating) =>
+                            onRateAssignment(assignment.weekStartDate, rating)
+                          }
+                          size="sm"
+                        />
+                      </div>
+                    )}
                   </div>
                   <Button
                     variant="ghost"

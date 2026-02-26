@@ -1,23 +1,26 @@
 # Outline (Scope Lock) — CakeGen (Theme Cake Generator)
 
 ## 1) One-sentence goal
+
 A lightweight team app that turns a customer’s theme request into one or more cake concepts (recipe + generated image), estimates ingredient costs with store suggestions, and supports sharing for approval + comments—while maintaining a reusable “Cake Bank” of themed cakes.
 
 ---
 
 ## 2) Non-goals (explicitly NOT doing)
+
 - No payments, checkout, invoicing, or order fulfillment
 - No delivery logistics or booking a baker
 - No full inventory management (store stock levels / live availability not guaranteed in v1)
 - No fully featured database in v1 (start with JSON file storage)
 - No advanced user management (SSO, roles/permissions, enterprise RBAC)
 - No multi-language support in v1
-- No dietary/allergen compliance guarantees (we can *suggest*, but not certify)
+- No dietary/allergen compliance guarantees (we can _suggest_, but not certify)
 - No public social feed (likes/follows), only share links for review
 
 ---
 
 ## 3) Target user
+
 - Primary: Teams (office teams / event teams / friends) that bake themed cakes for celebrations and want repeatable concepts.
 - Secondary: The “cake coordinator” (person who collects the request, generates options, shares for approval, assigns weekly baker).
 - Context: Used when planning birthdays, team events, theme parties, office celebrations, seasonal events—especially when the team wants ideas fast and a consistent “theme library”.
@@ -25,6 +28,7 @@ A lightweight team app that turns a customer’s theme request into one or more 
 ---
 
 ## 4) Core flows (3–7 bullets)
+
 1. **Create cake request**
    - Enter customer/theme prompt (occasion, vibe, colors, servings, skill level, dietary notes, budget range).
    - Choose number of cake concepts to generate (1–N).
@@ -42,13 +46,16 @@ A lightweight team app that turns a customer’s theme request into one or more 
    - Capture comment threads and approval status.
 6. **Weekly Cake Bonanza**
    - Create a weekly schedule and assign a user to a week.
-   - Notify/visibility in-app: who’s up next + what cake theme is planned.
+   - Calendar view: monthly grid showing who's assigned to each week at a glance.
+   - Notify/visibility in-app: who's up next + what cake theme is planned.
+   - Rate each week's cake (1–5 stars) after it's baked — track team favorites over time.
 
 ---
 
 ## 5) Data model (minimal)
 
 ### Entity: `User` (low-key persona)
+
 - fields:
   - `id` (string)
   - `displayName` (string)
@@ -56,6 +63,7 @@ A lightweight team app that turns a customer’s theme request into one or more 
   - `createdAt` (ISO string)
 
 ### Entity: `CakeRequest`
+
 - fields:
   - `id`
   - `createdAt`
@@ -71,6 +79,7 @@ A lightweight team app that turns a customer’s theme request into one or more 
   - `status` (enum: draft/generated/shared/approved/rejected)
 
 ### Entity: `CakeConcept`
+
 - fields:
   - `id`
   - `requestId`
@@ -97,6 +106,7 @@ A lightweight team app that turns a customer’s theme request into one or more 
   - `savedToBank` (boolean)
 
 ### Entity: `ThemeCategory`
+
 - fields:
   - `id`
   - `name` (e.g., “Space”, “Golf”, “Kids”, “Christmas”)
@@ -104,6 +114,7 @@ A lightweight team app that turns a customer’s theme request into one or more 
   - `cakeConceptIds[]`
 
 ### Entity: `ShareLink`
+
 - fields:
   - `id`
   - `cakeConceptId`
@@ -113,6 +124,7 @@ A lightweight team app that turns a customer’s theme request into one or more 
   - `permission` (enum: view/comment)
 
 ### Entity: `Comment`
+
 - fields:
   - `id`
   - `shareLinkId` or `cakeConceptId`
@@ -121,19 +133,23 @@ A lightweight team app that turns a customer’s theme request into one or more 
   - `createdAt`
 
 ### Entity: `BonanzaSchedule`
+
 - fields:
   - `id`
   - `teamName`
   - `startDate`
   - `cadence` (enum: weekly)
-  - `assignments[]` (weekStartDate, userId, themeCategoryId?, cakeConceptId?)
+  - `assignments[]` (weekStartDate, userId, themeCategoryId?, cakeConceptId?, rating?)
+
+> `rating` is 1–5 stars (integer, optional). Null/undefined means not yet rated.
 
 > Storage v1: `data/db.json` with arrays for each entity. Migrate to real DB later.
 
 ---
 
 ## 6) UI references
-- Figma link(s): *(add when available)*
+
+- Figma link(s): _(add when available)_
 - Screenshots: see `docs/screenshots/`
 - Moodboard: see `docs/moodboard/`
 - Notes (visual direction, typography, tone):
@@ -145,6 +161,7 @@ A lightweight team app that turns a customer’s theme request into one or more 
 ---
 
 ## 7) Definition of Done (v1)
+
 - [ ] Create Cake Request with constraints and number of concepts
 - [ ] Generate cake concept(s): recipe + image + extras suggestions
 - [ ] Regenerate (full concept OR recipe-only OR image-only)
@@ -153,6 +170,7 @@ A lightweight team app that turns a customer’s theme request into one or more 
 - [ ] Browse/search Cake Bank by theme + tags
 - [ ] Share cake concept via link and collect comments + approval state
 - [ ] Weekly Cake Bonanza: create schedule + assign users to weeks + view upcoming assignments
+- [ ] Weekly Cake Bonanza: calendar view + rate each week's cake (1–5 stars)
 - [ ] JSON file persistence works (read/write) with basic validation + backup
 - [ ] Basic error states + loading states exist
 - [ ] Responsive for desktop + mobile
@@ -162,6 +180,7 @@ A lightweight team app that turns a customer’s theme request into one or more 
 ---
 
 ## Open questions (to lock scope and avoid surprises)
+
 1. **Region & stores:** Which country/city should store suggestions target in v1 (e.g., Norway: Meny/Rema/Coop, Sweden: ICA/Coop/Willys, UK: Tesco/Sainsbury’s)? Or should v1 use “generic store types” (cheap/standard/premium) without real store names?
 2. **Pricing method:** Do you want:
    - A) static “price catalog” you maintain in JSON, or

@@ -18,6 +18,9 @@ Keep this short: what we decided, and why.
 - 2026-02-26: Simple approval states (Draft → Shared → Approved / Changes Requested) — no versioning.
 - 2026-02-26: In-app only bonanza notifications — no email/Slack in v1.
 - 2026-02-26: Hero + dashboard homepage with rotating theme cards and quick actions.
+- 2026-02-26: Bonanza calendar view as default view for weekly schedule visibility.
+- 2026-02-26: 1–5 star rating on bonanza assignments — rate after the week is done, stored on the assignment object.
+- 2026-02-26: GitHub Pages deployment via GitHub Actions (project site at /cakegenerator/).
 
 ## UI system choice (per project)
 

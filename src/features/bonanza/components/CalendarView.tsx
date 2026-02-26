@@ -3,6 +3,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ChefHat,
+  Star,
   Trash2,
   UserPlus,
 } from 'lucide-react'
@@ -14,6 +15,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { StarRating } from './StarRating'
 import type { BonanzaAssignment, User } from '@/lib/types'
 
 // --- Types ---
@@ -22,6 +24,7 @@ interface CalendarViewProps {
   assignments: BonanzaAssignment[]
   users: User[]
   onRemoveAssignment: (weekStartDate: string) => void
+  onRateAssignment: (weekStartDate: string, rating: number) => void
   onAddAssignment: () => void
 }
 
@@ -98,6 +101,7 @@ export function CalendarView({
   assignments,
   users,
   onRemoveAssignment,
+  onRateAssignment,
   onAddAssignment,
 }: CalendarViewProps) {
   const today = new Date()
@@ -241,7 +245,7 @@ export function CalendarView({
                       weekAssignment &&
                       weekUser &&
                       day.isCurrentMonth && (
-                        <div className="mt-1">
+                        <div className="mt-1 space-y-1">
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <div
@@ -274,6 +278,33 @@ export function CalendarView({
                               </p>
                             </TooltipContent>
                           </Tooltip>
+                          {/* Star rating for past/current weeks */}
+                          {(isPastWeek || isCurrentWeekRow) && (
+                            <StarRating
+                              value={weekAssignment.rating}
+                              onChange={(rating) =>
+                                onRateAssignment(
+                                  weekAssignment.weekStartDate,
+                                  rating
+                                )
+                              }
+                              size="sm"
+                            />
+                          )}
+                          {/* Compact read-only stars for future rated weeks */}
+                          {!isPastWeek &&
+                            !isCurrentWeekRow &&
+                            weekAssignment.rating &&
+                            weekAssignment.rating > 0 && (
+                              <div className="flex items-center gap-0.5">
+                                {[1, 2, 3, 4, 5].map((s) => (
+                                  <Star
+                                    key={s}
+                                    className={`h-2.5 w-2.5 ${s <= (weekAssignment.rating ?? 0) ? 'fill-amber-400 text-amber-400' : 'fill-transparent text-muted-foreground/30'}`}
+                                  />
+                                ))}
+                              </div>
+                            )}
                         </div>
                       )}
                   </div>
@@ -405,6 +436,12 @@ function UpcomingAssignments({
                 })}
               </span>
               {isNow && <span className="text-[10px] opacity-75">Now</span>}
+              {a.rating && a.rating > 0 && (
+                <span className="flex items-center gap-0.5 text-[10px]">
+                  <Star className="h-2.5 w-2.5 fill-amber-400 text-amber-400" />
+                  {a.rating}
+                </span>
+              )}
             </Badge>
           )
         })}
