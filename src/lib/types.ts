@@ -152,9 +152,26 @@ export interface Comment {
   createdAt: string
 }
 
+/** Day of week: 0 = Sunday, 1 = Monday, ..., 5 = Friday, 6 = Saturday */
+export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
+
+export const DAY_NAMES: Record<DayOfWeek, string> = {
+  0: 'Sunday',
+  1: 'Monday',
+  2: 'Tuesday',
+  3: 'Wednesday',
+  4: 'Thursday',
+  5: 'Friday',
+  6: 'Saturday',
+}
+
+export type BonanzaPeriodStatus = 'active' | 'completed'
+
 export interface BonanzaAssignment {
   weekStartDate: string
   userId: string
+  cakeDay: DayOfWeek // default 5 (Friday), overridable per week
+  cakeName?: string // optional theme/label for this week's cake
   themeCategoryId?: string
   cakeConceptId?: string
   rating?: number // 1–5 stars, undefined = not yet rated
@@ -164,7 +181,9 @@ export interface BonanzaSchedule {
   id: string
   teamName: string
   startDate: string
+  endDate: string // end of period
   cadence: 'weekly'
+  status: BonanzaPeriodStatus
   assignments: BonanzaAssignment[]
 }
 

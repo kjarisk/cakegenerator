@@ -72,6 +72,22 @@
 - [x] Replaced hardcoded Tailwind palette colors with semantic tokens for theme consistency
 - [x] Update docs (decisions.md, plan.md)
 
+### Phase 3a.2 — Bonanza Upgrade (Periods + Hype)
+
+- [x] Updated data model: `BonanzaSchedule` now has `endDate`, `status` (active/completed), `BonanzaAssignment` has `cakeDay` (overridable, default Friday) and `cakeName`
+- [x] Updated schemas: `createBonanzaPeriodSchema` with date range + refinement validation
+- [x] Rewrote query hooks: `useCreateBonanzaPeriodMutation`, `useAssignBakerMutation`, `useUpdateCakeDayMutation`, `useCompletePeriodMutation`, helper functions (`getActivePeriod`, `getArchivedPeriods`)
+- [x] Updated Zustand store: `viewingArchiveId` for archive browsing, `isAssignBakerOpen`/`assignBakerWeek` dialog state
+- [x] Built `HypeBanner` component: canvas-confetti burst on load, animated gradient, bouncing cake emoji, non-Friday "HEADS UP" alert
+- [x] Built `CreatePeriodDialog`: date range picker, bulk week generation, period name suggestion
+- [x] Built `AssignBakerDialog`: baker selection, cake day override, cake name/theme input
+- [x] Updated `CalendarView`: period-aware, cake day markers per week, non-Friday callouts, `isReadOnly` prop for archives
+- [x] Rewrote `BonanzaPage`: hype banner, period info card, archive dropdown, list+calendar views, empty state
+- [x] Added `animate-gradient-shift` CSS keyframe animation
+- [x] Fixed Monday/Sunday week-start inconsistency (all Monday-start now)
+- [x] Updated `docs/outline.md` entity definition for new period model
+- [x] Build passes, lint passes (only expected React Compiler warning)
+
 ### Phase 3b — Remaining polish
 
 - [ ] Accessibility pass (keyboard/focus, labels)

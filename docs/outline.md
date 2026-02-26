@@ -135,18 +135,28 @@ A lightweight team app that turns a customer’s theme request into one or more 
   - `message` (text)
   - `createdAt`
 
-### Entity: `BonanzaSchedule`
+### Entity: `BonanzaSchedule` (Period)
 
 - fields:
   - `id`
-  - `teamName`
+  - `teamName` (period name, e.g., "Spring 2026")
   - `startDate`
+  - `endDate`
   - `cadence` (enum: weekly)
-  - `assignments[]` (weekStartDate, userId, themeCategoryId?, cakeConceptId?, rating?)
+  - `status` (enum: active/completed)
+  - `assignments[]`:
+    - `weekStartDate` (ISO date string, Monday of that week)
+    - `userId` (string, empty = unassigned)
+    - `cakeDay` (DayOfWeek 0–6, default 5 = Friday, overridable per week)
+    - `cakeName?` (optional theme/label for this week's cake)
+    - `themeCategoryId?`
+    - `cakeConceptId?`
+    - `rating?` (1–5 stars, undefined = not yet rated)
 
-> `rating` is 1–5 stars (integer, optional). Null/undefined means not yet rated.
+> Periods replace the single-schedule concept. Newest period with `status: 'active'` is the current one. Older periods are browseable archives.
+> Non-Friday cake days trigger visual "HEADS UP" alerts in the hype banner and calendar.
 
-> Storage v1: `data/db.json` with arrays for each entity. Migrate to real DB later.
+> Storage v1: localStorage with `cakegen:*` keys. Migrate to real DB later.
 
 ---
 

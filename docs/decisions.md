@@ -38,6 +38,12 @@ Keep this short: what we decided, and why.
 - 2026-02-26: All CSS utility classes (glows, glass, gradients, table-striped) made theme-aware with `:root` / `.dark` variants.
 - 2026-02-26: Replaced hardcoded Tailwind palette colors (amber-400, green-500, orange-500, emerald-400) with semantic tokens (`--warm`, `--success`, `--destructive`) for theme consistency.
 - 2026-02-26: Dark mode remains the default — toggle persists choice to localStorage.
+- 2026-02-26: Bonanza periods replace single schedules — `BonanzaSchedule` now has `endDate` + `status` (active/completed). Newest active period is displayed; older ones are browseable archives.
+- 2026-02-26: Bulk period creation — date range picker generates all Monday-start weeks with empty assignments. Bakers assigned later via calendar.
+- 2026-02-26: Default cake day is Friday (`DayOfWeek = 5`), overridable per week. Non-Friday days trigger "HEADS UP" alerts in hype banner and calendar.
+- 2026-02-26: `canvas-confetti` (~5KB gzipped) for confetti burst on hype banner — lightweight, no ongoing runtime cost.
+- 2026-02-26: Week-start standardized to Monday across all bonanza code (fixed prior Sunday-start inconsistency).
+- 2026-02-26: `removeAssignment` now unassigns baker (sets `userId: ''`) rather than deleting the week entry, since weeks are pre-generated as part of the period.
 
 ## UI system choice (per project)
 

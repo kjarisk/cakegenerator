@@ -86,8 +86,27 @@ export const createThemeCategorySchema = z.object({
 
 export type CreateThemeCategoryInput = z.infer<typeof createThemeCategorySchema>
 
-// --- Bonanza Assignment Schema ---
+// --- Bonanza Period Schema ---
 
+export const bonanzaPeriodStatusSchema = z.enum(['active', 'completed'])
+
+export const createBonanzaPeriodSchema = z
+  .object({
+    teamName: z
+      .string()
+      .min(1, 'Team name is required')
+      .max(100, 'Max 100 characters'),
+    startDate: z.string().min(1, 'Start date is required'),
+    endDate: z.string().min(1, 'End date is required'),
+  })
+  .refine((data) => new Date(data.endDate) > new Date(data.startDate), {
+    message: 'End date must be after start date',
+    path: ['endDate'],
+  })
+
+export type CreateBonanzaPeriodInput = z.infer<typeof createBonanzaPeriodSchema>
+
+/** @deprecated Use createBonanzaPeriodSchema instead */
 export const createBonanzaScheduleSchema = z.object({
   teamName: z
     .string()

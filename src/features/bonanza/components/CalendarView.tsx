@@ -6,6 +6,8 @@ import {
   Star,
   Trash2,
   UserPlus,
+  AlertTriangle,
+  Cake,
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -16,7 +18,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { StarRating } from './StarRating'
-import type { BonanzaAssignment, User } from '@/lib/types'
+import type { BonanzaAssignment, User, DayOfWeek } from '@/lib/types'
+import { DAY_NAMES } from '@/lib/types'
 
 // --- Types ---
 
@@ -25,13 +28,15 @@ interface CalendarViewProps {
   users: User[]
   onRemoveAssignment: (weekStartDate: string) => void
   onRateAssignment: (weekStartDate: string, rating: number) => void
-  onAddAssignment: () => void
+  onAssignBaker: (weekStartDate: string) => void
+  isReadOnly?: boolean
 }
 
 interface CalendarDay {
   date: Date
   isCurrentMonth: boolean
   isToday: boolean
+  isCakeDay: boolean // is this the cake day for this week's assignment?
   assignment: BonanzaAssignment | null
   isWeekStart: boolean
 }
@@ -71,6 +76,15 @@ function isInWeek(date: Date, weekStartDate: string): boolean {
   return d >= monday && d < nextMonday
 }
 
+/** Get the actual date for a given cake day within a week. */
+function getCakeDateForWeek(weekStartDate: string, cakeDay: DayOfWeek): Date {
+  const monday = getMonday(new Date(weekStartDate + 'T00:00:00'))
+  const offset = cakeDay === 0 ? 6 : cakeDay - 1
+  const cakeDate = new Date(monday)
+  cakeDate.setDate(monday.getDate() + offset)
+  return cakeDate
+}
+
 function getDaysInMonthGrid(year: number, month: number): Date[] {
   const firstDay = new Date(year, month, 1)
   const lastDay = new Date(year, month + 1, 0)
@@ -102,7 +116,8 @@ export function CalendarView({
   users,
   onRemoveAssignment,
   onRateAssignment,
-  onAddAssignment,
+  onAssignBaker,
+  isReadOnly = false,
 }: CalendarViewProps) {
   const today = new Date()
   const [currentMonth, setCurrentMonth] = useState(
@@ -127,7 +142,25 @@ export function CalendarView({
       const assignment =
         assignments.find((a) => isInWeek(date, a.weekStartDate)) || null
 
-      return { date, isCurrentMonth, isToday, assignment, isWeekStart }
+      // Check if this date is the cake day for the assignment
+      let isCakeDay = false
+      if (assignment && assignment.userId) {
+        const cakeDay = assignment.cakeDay ?? 5
+        const cakeDate = getCakeDateForWeek(
+          assignment.weekStartDate,
+          cakeDay as DayOfWeek
+        )
+        isCakeDay = isSameDay(date, cakeDate)
+      }
+
+      return {
+        date,
+        isCurrentMonth,
+        isToday,
+        isCakeDay,
+        assignment,
+        isWeekStart,
+      }
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year, month, assignments])
@@ -198,12 +231,18 @@ export function CalendarView({
         {weeks.map((week, wi) => {
           // Determine the assignment for this entire week row (if any)
           const weekAssignment = week[0].assignment
-          const weekUser = weekAssignment
-            ? userMap.get(weekAssignment.userId)
-            : null
+          const weekUser =
+            weekAssignment && weekAssignment.userId
+              ? userMap.get(weekAssignment.userId)
+              : null
           const isCurrentWeekRow = week.some((d) => d.isToday)
           const weekMonday = week[0].date
           const isPastWeek = !isCurrentWeekRow && weekMonday < today
+          const isUnassigned =
+            weekAssignment &&
+            (!weekAssignment.userId || weekAssignment.userId === '')
+          const cakeDay = weekAssignment?.cakeDay ?? 5
+          const isNotFriday = cakeDay !== 5 && weekUser
 
           return (
             <div key={wi} className="group relative">
@@ -224,8 +263,15 @@ export function CalendarView({
                       'relative min-h-[72px] px-2 py-1.5 transition-colors',
                       di < 6 ? 'border-r border-border' : '',
                       !day.isCurrentMonth ? 'opacity-35' : '',
-                      day.assignment && day.isCurrentMonth && !isCurrentWeekRow
+                      day.assignment &&
+                      day.assignment.userId &&
+                      day.isCurrentMonth &&
+                      !isCurrentWeekRow
                         ? 'bg-primary/[0.06]'
+                        : '',
+                      // Highlight cake day cell
+                      day.isCakeDay && day.isCurrentMonth
+                        ? 'bg-warm/10 dark:bg-warm/15'
                         : '',
                     ]
                       .filter(Boolean)
@@ -245,111 +291,178 @@ export function CalendarView({
                       {day.date.getDate()}
                     </span>
 
+                    {/* Cake day marker */}
+                    {day.isCakeDay && day.isCurrentMonth && (
+                      <div className="absolute top-1 right-1">
+                        <Cake className="h-3.5 w-3.5 text-warm" />
+                      </div>
+                    )}
+
                     {/* Show assignment badge on Monday cell */}
-                    {day.isWeekStart &&
-                      weekAssignment &&
-                      weekUser &&
-                      day.isCurrentMonth && (
-                        <div className="mt-1 space-y-1">
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div
-                                className={[
-                                  'flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium leading-tight truncate',
-                                  isCurrentWeekRow
-                                    ? 'bg-warm/20 text-foreground'
-                                    : isPastWeek
-                                      ? 'bg-muted text-muted-foreground'
-                                      : 'bg-primary/15 text-primary',
-                                ]
-                                  .filter(Boolean)
-                                  .join(' ')}
-                              >
-                                <ChefHat className="h-3 w-3 shrink-0" />
-                                <span className="truncate">
-                                  {weekUser.displayName}
-                                </span>
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>
-                                {weekUser.displayName} — Week of{' '}
-                                {new Date(
-                                  weekAssignment.weekStartDate + 'T00:00:00'
-                                ).toLocaleDateString(undefined, {
-                                  month: 'short',
-                                  day: 'numeric',
-                                })}
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                          {/* Star rating for past/current weeks */}
-                          {(isPastWeek || isCurrentWeekRow) && (
-                            <StarRating
-                              value={weekAssignment.rating}
-                              onChange={(rating) =>
-                                onRateAssignment(
-                                  weekAssignment.weekStartDate,
-                                  rating
-                                )
-                              }
-                              size="sm"
-                            />
-                          )}
-                          {/* Compact read-only stars for future rated weeks */}
-                          {!isPastWeek &&
-                            !isCurrentWeekRow &&
-                            weekAssignment.rating &&
-                            weekAssignment.rating > 0 && (
-                              <div className="flex items-center gap-0.5">
-                                {[1, 2, 3, 4, 5].map((s) => (
-                                  <Star
-                                    key={s}
-                                    className={`h-2.5 w-2.5 ${s <= (weekAssignment.rating ?? 0) ? 'fill-warm text-warm' : 'fill-transparent text-muted-foreground/30'}`}
-                                  />
-                                ))}
+                    {day.isWeekStart && day.isCurrentMonth && (
+                      <>
+                        {weekUser ? (
+                          <div className="mt-1 space-y-1">
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <div
+                                  className={[
+                                    'flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium leading-tight truncate',
+                                    isCurrentWeekRow
+                                      ? 'bg-warm/20 text-foreground'
+                                      : isPastWeek
+                                        ? 'bg-muted text-muted-foreground'
+                                        : 'bg-primary/15 text-primary',
+                                  ]
+                                    .filter(Boolean)
+                                    .join(' ')}
+                                >
+                                  <ChefHat className="h-3 w-3 shrink-0" />
+                                  <span className="truncate">
+                                    {weekUser.displayName}
+                                  </span>
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>
+                                  {weekUser.displayName} — Week of{' '}
+                                  {new Date(
+                                    weekAssignment!.weekStartDate + 'T00:00:00'
+                                  ).toLocaleDateString(undefined, {
+                                    month: 'short',
+                                    day: 'numeric',
+                                  })}
+                                  {isNotFriday && (
+                                    <>
+                                      {' '}
+                                      — Cake on{' '}
+                                      {DAY_NAMES[cakeDay as DayOfWeek]}!
+                                    </>
+                                  )}
+                                </p>
+                              </TooltipContent>
+                            </Tooltip>
+
+                            {/* Non-Friday badge */}
+                            {isNotFriday && (
+                              <div className="flex items-center gap-0.5 text-[10px] text-warm font-medium">
+                                <AlertTriangle className="h-2.5 w-2.5" />
+                                <span>{DAY_NAMES[cakeDay as DayOfWeek]}</span>
                               </div>
                             )}
-                        </div>
-                      )}
+
+                            {/* Cake name badge */}
+                            {weekAssignment?.cakeName && (
+                              <div className="text-[10px] text-muted-foreground truncate max-w-[80px]">
+                                {weekAssignment.cakeName}
+                              </div>
+                            )}
+
+                            {/* Star rating for past/current weeks */}
+                            {(isPastWeek || isCurrentWeekRow) && (
+                              <StarRating
+                                value={weekAssignment!.rating}
+                                onChange={
+                                  isReadOnly
+                                    ? undefined
+                                    : (rating) =>
+                                        onRateAssignment(
+                                          weekAssignment!.weekStartDate,
+                                          rating
+                                        )
+                                }
+                                size="sm"
+                                readonly={isReadOnly}
+                              />
+                            )}
+                            {/* Compact read-only stars for future rated weeks */}
+                            {!isPastWeek &&
+                              !isCurrentWeekRow &&
+                              weekAssignment?.rating &&
+                              weekAssignment.rating > 0 && (
+                                <div className="flex items-center gap-0.5">
+                                  {[1, 2, 3, 4, 5].map((s) => (
+                                    <Star
+                                      key={s}
+                                      className={`h-2.5 w-2.5 ${s <= (weekAssignment.rating ?? 0) ? 'fill-warm text-warm' : 'fill-transparent text-muted-foreground/30'}`}
+                                    />
+                                  ))}
+                                </div>
+                              )}
+                          </div>
+                        ) : isUnassigned ? (
+                          <div className="mt-1">
+                            <div className="flex items-center gap-1 rounded-md bg-muted/50 px-1.5 py-0.5 text-[11px] text-muted-foreground leading-tight">
+                              <UserPlus className="h-3 w-3 shrink-0 opacity-50" />
+                              <span className="italic opacity-60">
+                                Unassigned
+                              </span>
+                            </div>
+                          </div>
+                        ) : null}
+                      </>
+                    )}
                   </div>
                 ))}
               </div>
 
-              {/* Week row hover actions (always visible on mobile, hover on desktop) */}
-              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex md:hidden md:group-hover:flex items-center gap-1">
-                {weekAssignment ? (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6 bg-background/80 backdrop-blur-sm shadow-sm"
-                        onClick={() =>
-                          onRemoveAssignment(weekAssignment.weekStartDate)
-                        }
-                      >
-                        <Trash2 className="h-3 w-3 text-destructive" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Remove assignment</TooltipContent>
-                  </Tooltip>
-                ) : (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6 bg-background/80 backdrop-blur-sm shadow-sm"
-                        onClick={onAddAssignment}
-                      >
-                        <UserPlus className="h-3 w-3 text-primary" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Assign this week</TooltipContent>
-                  </Tooltip>
-                )}
-              </div>
+              {/* Week row hover actions */}
+              {!isReadOnly && (
+                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex md:hidden md:group-hover:flex items-center gap-1">
+                  {weekUser ? (
+                    <>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6 bg-background/80 backdrop-blur-sm shadow-sm"
+                            onClick={() =>
+                              weekAssignment &&
+                              onAssignBaker(weekAssignment.weekStartDate)
+                            }
+                          >
+                            <ChefHat className="h-3 w-3 text-primary" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Re-assign baker</TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6 bg-background/80 backdrop-blur-sm shadow-sm"
+                            onClick={() =>
+                              weekAssignment &&
+                              onRemoveAssignment(weekAssignment.weekStartDate)
+                            }
+                          >
+                            <Trash2 className="h-3 w-3 text-destructive" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Unassign baker</TooltipContent>
+                      </Tooltip>
+                    </>
+                  ) : weekAssignment ? (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6 bg-background/80 backdrop-blur-sm shadow-sm"
+                          onClick={() =>
+                            onAssignBaker(weekAssignment.weekStartDate)
+                          }
+                        >
+                          <UserPlus className="h-3 w-3 text-primary" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Assign baker</TooltipContent>
+                    </Tooltip>
+                  ) : null}
+                </div>
+              )}
             </div>
           )
         })}
@@ -362,28 +475,21 @@ export function CalendarView({
           Today
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="inline-block h-2.5 w-2.5 rounded-sm bg-accent/40" />
+          <span className="inline-block h-2.5 w-2.5 rounded-sm bg-warm/20" />
           Current week
         </div>
         <div className="flex items-center gap-1.5">
           <ChefHat className="h-3 w-3" />
           Assigned baker
         </div>
-        {assignments.length === 0 && (
-          <Button
-            variant="link"
-            size="sm"
-            className="h-auto p-0 text-xs"
-            onClick={onAddAssignment}
-          >
-            <UserPlus className="mr-1 h-3 w-3" />
-            Assign first week
-          </Button>
-        )}
+        <div className="flex items-center gap-1.5">
+          <Cake className="h-3 w-3 text-warm" />
+          Cake day
+        </div>
       </div>
 
       {/* Upcoming assignments summary (below calendar) */}
-      {assignments.length > 0 && (
+      {assignments.filter((a) => a.userId).length > 0 && (
         <UpcomingAssignments
           assignments={assignments}
           userMap={userMap}
@@ -407,6 +513,7 @@ function UpcomingAssignments({
 }) {
   const upcoming = assignments
     .filter((a) => {
+      if (!a.userId) return false
       const ws = new Date(a.weekStartDate + 'T00:00:00')
       const monday = getMonday(ws)
       const nextMonday = new Date(monday)
@@ -426,6 +533,8 @@ function UpcomingAssignments({
           const user = userMap.get(a.userId)
           const ws = new Date(a.weekStartDate + 'T00:00:00')
           const isNow = isInWeek(today, a.weekStartDate)
+          const cakeDay = a.cakeDay ?? 5
+          const isNotFriday = cakeDay !== 5
           return (
             <Badge
               key={a.weekStartDate}
@@ -440,6 +549,11 @@ function UpcomingAssignments({
                   day: 'numeric',
                 })}
               </span>
+              {isNotFriday && (
+                <span className="text-[10px] text-warm">
+                  {DAY_NAMES[cakeDay as DayOfWeek].slice(0, 3)}
+                </span>
+              )}
               {isNow && <span className="text-[10px] opacity-75">Now</span>}
               {a.rating && a.rating > 0 && (
                 <span className="flex items-center gap-0.5 text-[10px]">
