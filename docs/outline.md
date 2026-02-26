@@ -188,8 +188,8 @@ A lightweight team app that turns a customer’s theme request into one or more 
 - [x] JSON file persistence works (read/write) with basic validation + backup
 - [x] Basic error states + loading states exist
 - [x] Responsive for desktop + mobile
-- [ ] Tests exist for critical logic (generation orchestration, JSON persistence, share token access) — **PARTIAL**: dispatcher, prompts, mock-ai, storage, schemas, store tested; sharing token flow + bonanza mutations untested
-- [ ] README updated with run instructions + data file format — **PARTIAL**: QUICKSTART.md is up to date; README.md still shows vibecoding template copy
+- [x] Tests exist for critical logic (generation orchestration, JSON persistence, share token access) — dispatcher, prompts, mock-ai, storage, schemas, store, sharing flow, bonanza mutations all tested
+- [x] README updated with run instructions + data file format
 
 ---
 

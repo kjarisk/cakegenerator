@@ -117,3 +117,6 @@
   - Animated shimmer CTA: `primary → accent → warm` gradient with `animate-gradient-shift`; shows count dynamically
   - Bundle chunk shrank from 19.88 kB → 14.10 kB (dropped unused shadcn Select/Slider/Checkbox)
 - [x] Final cleanup + docs
+  - Tests added for sharing flow (`sharing-logic.test.ts`: token generation, expiry, comment flow, approval transitions)
+  - Tests added for bonanza mutations (`bonanza-logic.test.ts`: week generation, period creation, assign/unassign baker, cake day override, rating, archive helpers)
+  - README rewritten with project-specific run instructions, localStorage data format, feature summary, and tech stack
