@@ -64,7 +64,9 @@ export function Component() {
           <Card className="mt-8">
             <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
               <XCircle className="h-12 w-12 text-destructive/50" />
-              <h2 className="text-lg font-bold">Share link not found</h2>
+              <h2 className="font-display text-lg font-bold">
+                Share link not found
+              </h2>
               <p className="text-sm text-muted-foreground">
                 This link may have expired or the concept was removed.
               </p>
@@ -124,7 +126,9 @@ export function Component() {
           {/* Title + tags + description */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-xl">{concept.title}</CardTitle>
+              <CardTitle className="font-display text-xl">
+                {concept.title}
+              </CardTitle>
               <div className="flex flex-wrap gap-1.5">
                 {concept.themeTags.map((tag) => (
                   <Badge key={tag} variant="secondary" className="text-xs">
@@ -160,18 +164,20 @@ export function Component() {
           {/* Cost summary */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Estimated Cost</CardTitle>
+              <CardTitle className="font-display text-base">
+                Estimated Cost
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap items-baseline gap-2">
-                <span className="text-2xl font-bold text-accent">
+                <span className="text-2xl font-bold text-gradient-warm">
                   ${concept.shoppingPlan.totalEstimatedCost.toFixed(2)}
                 </span>
                 <span className="text-sm text-muted-foreground">
                   ingredients
                 </span>
                 <span className="text-muted-foreground">+</span>
-                <span className="text-lg font-bold text-accent">
+                <span className="text-lg font-bold text-gradient-warm">
                   ${concept.extras.addonsTotalEstimatedCost.toFixed(2)}
                 </span>
                 <span className="text-sm text-muted-foreground">extras</span>
@@ -183,7 +189,9 @@ export function Component() {
           {canComment && approvalStatus === 'shared' && (
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Approval</CardTitle>
+                <CardTitle className="font-display text-base">
+                  Approval
+                </CardTitle>
                 <CardDescription>
                   Approve this concept or request changes.
                 </CardDescription>
@@ -215,7 +223,7 @@ export function Component() {
           {/* Comments */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">
+              <CardTitle className="font-display text-base">
                 <MessageSquare className="mr-1.5 inline h-4 w-4" />
                 Comments
                 {comments && comments.length > 0 && (
@@ -272,7 +280,7 @@ function SharedHeader() {
       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent text-accent-foreground">
         <Cake className="h-4 w-4" />
       </div>
-      <span className="font-bold">CakeGen</span>
+      <span className="font-display font-bold">CakeGen</span>
       <span className="text-muted-foreground text-sm">— Shared Concept</span>
     </div>
   )

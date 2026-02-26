@@ -130,7 +130,9 @@ export function Component() {
             <ArrowLeft className="mr-1 h-4 w-4" />
             Back
           </Button>
-          <h1 className="text-2xl font-bold tracking-tight">{concept.title}</h1>
+          <h1 className="font-display text-2xl font-bold tracking-tight">
+            {concept.title}
+          </h1>
           <div className="flex flex-wrap gap-2">
             {concept.themeTags.map((tag) => (
               <Badge key={tag} variant="secondary">
@@ -230,7 +232,9 @@ export function Component() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Description</CardTitle>
+              <CardTitle className="font-display text-base">
+                Description
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground leading-relaxed">
@@ -241,10 +245,10 @@ export function Component() {
 
           {/* Quick stats */}
           <div className="grid grid-cols-3 gap-3">
-            <Card className="border-chart-4/20">
+            <Card className="border-warm/30 bg-warm/5">
               <CardContent className="flex flex-col items-center gap-1 pt-4 pb-3">
-                <Clock className="h-5 w-5 text-chart-4" />
-                <span className="text-lg font-bold">
+                <Clock className="h-5 w-5 text-warm" />
+                <span className="font-display text-lg font-bold">
                   {concept.recipe.timeEstimateMinutes}m
                 </span>
                 <span className="text-[11px] text-muted-foreground">
@@ -252,10 +256,10 @@ export function Component() {
                 </span>
               </CardContent>
             </Card>
-            <Card className="border-primary/20">
+            <Card className="border-primary/30 bg-primary/5">
               <CardContent className="flex flex-col items-center gap-1 pt-4 pb-3">
                 <Users className="h-5 w-5 text-primary" />
-                <span className="text-lg font-bold">
+                <span className="font-display text-lg font-bold">
                   {concept.recipe.ingredients.length}
                 </span>
                 <span className="text-[11px] text-muted-foreground">
@@ -263,10 +267,10 @@ export function Component() {
                 </span>
               </CardContent>
             </Card>
-            <Card className="border-accent/20">
+            <Card className="border-accent/30 bg-accent/5">
               <CardContent className="flex flex-col items-center gap-1 pt-4 pb-3">
                 <ChefHat className="h-5 w-5 text-accent" />
-                <span className="text-lg font-bold capitalize">
+                <span className="font-display text-lg font-bold capitalize">
                   {concept.recipe.difficulty}
                 </span>
                 <span className="text-[11px] text-muted-foreground">
@@ -300,10 +304,12 @@ export function Component() {
               {/* Ingredients */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">Ingredients</CardTitle>
+                  <CardTitle className="font-display text-base">
+                    Ingredients
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto table-striped">
                     <Table>
                       <TableHeader>
                         <TableRow>
@@ -335,7 +341,9 @@ export function Component() {
               {/* Steps */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">Instructions</CardTitle>
+                  <CardTitle className="font-display text-base">
+                    Instructions
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {concept.recipe.steps.map((step) => (
@@ -354,7 +362,7 @@ export function Component() {
               {/* Equipment */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">
+                  <CardTitle className="font-display text-base">
                     <Package className="mr-1.5 inline h-4 w-4" />
                     Equipment
                   </CardTitle>
@@ -375,7 +383,7 @@ export function Component() {
             <TabsContent value="shopping" className="space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">
+                  <CardTitle className="font-display text-base">
                     Estimated Total Cost
                   </CardTitle>
                   <CardDescription>
@@ -383,7 +391,7 @@ export function Component() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold text-accent">
+                  <div className="text-3xl font-bold text-gradient-warm font-display">
                     ${concept.shoppingPlan.totalEstimatedCost.toFixed(2)}
                     <span className="ml-1 text-sm font-normal text-muted-foreground">
                       {concept.shoppingPlan.currency}
@@ -394,12 +402,12 @@ export function Component() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">
+                  <CardTitle className="font-display text-base">
                     Ingredient Cost Breakdown
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto table-striped">
                     <Table>
                       <TableHeader>
                         <TableRow>
@@ -444,7 +452,9 @@ export function Component() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">Store Suggestions</CardTitle>
+                  <CardTitle className="font-display text-base">
+                    Store Suggestions
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {concept.shoppingPlan.storeSuggestions.map((store) => (
@@ -468,7 +478,7 @@ export function Component() {
             <TabsContent value="extras" className="space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">
+                  <CardTitle className="font-display text-base">
                     Theme Addons & Decorations
                   </CardTitle>
                   <CardDescription>
@@ -507,7 +517,7 @@ export function Component() {
                   <Separator className="my-4" />
                   <div className="flex justify-between">
                     <span className="font-medium">Total Extras</span>
-                    <span className="font-bold text-accent">
+                    <span className="font-bold text-gradient-warm">
                       ${concept.extras.addonsTotalEstimatedCost.toFixed(2)}
                     </span>
                   </div>

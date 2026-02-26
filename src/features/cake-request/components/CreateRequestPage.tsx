@@ -113,22 +113,32 @@ export function Component() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">
-          Create Cake Concept
-        </h1>
-        <p className="text-muted-foreground">
-          Describe your theme and constraints — we&apos;ll generate recipes,
-          images, and shopping plans.
-        </p>
+      {/* Page header with themed banner */}
+      <div className="relative overflow-hidden rounded-xl border border-accent/20 bg-gradient-to-r from-primary/15 via-accent/8 to-warm/8 px-6 py-5">
+        <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-accent/20 blur-2xl" />
+        <div className="pointer-events-none absolute -bottom-8 -left-8 h-24 w-24 rounded-full bg-warm/15 blur-2xl" />
+        <div className="relative flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/20 ring-1 ring-accent/30">
+            <Sparkles className="h-5 w-5 text-accent" />
+          </div>
+          <div>
+            <h1 className="font-display text-2xl font-bold tracking-tight">
+              Create Cake Concept
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Describe your theme and constraints — we&apos;ll generate recipes,
+              images, and shopping plans.
+            </p>
+          </div>
+        </div>
       </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Theme & Prompt */}
-          <Card>
+          <Card className="border-border/60 shadow-glow-sm">
             <CardHeader>
-              <CardTitle>Theme & Prompt</CardTitle>
+              <CardTitle className="font-display">Theme & Prompt</CardTitle>
               <CardDescription>
                 What kind of cake are you looking for? Describe the occasion,
                 vibe, colors, or any specific theme.
@@ -187,9 +197,9 @@ export function Component() {
           </Card>
 
           {/* Constraints */}
-          <Card>
+          <Card className="border-border/60">
             <CardHeader>
-              <CardTitle>Constraints</CardTitle>
+              <CardTitle className="font-display">Constraints</CardTitle>
               <CardDescription>
                 Help us tailor the recipe to your needs.
               </CardDescription>
@@ -378,7 +388,7 @@ export function Component() {
             type="submit"
             size="lg"
             disabled={createMutation.isPending}
-            className="w-full bg-accent hover:bg-accent/90 sm:w-auto"
+            className="w-full bg-accent hover:bg-accent/90 shadow-glow-accent font-semibold sm:w-auto"
           >
             {createMutation.isPending ? (
               <>

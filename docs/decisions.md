@@ -27,6 +27,12 @@ Keep this short: what we decided, and why.
 - 2026-02-26: DALL-E 3 temporary URLs accepted in v1 — graceful fallback via `CakeImage` component when expired.
 - 2026-02-26: JSON mode (`response_format: { type: "json_object" }`) for structured GPT-4o output — no zodResponseFormat due to Zod v4 compatibility.
 - 2026-02-26: Prompt templates isolated in `ai-prompts.ts` for easy iteration without touching API logic.
+- 2026-02-26: UX/UI upgrade — doubled card-vs-background contrast (L=0.10 bg, L=0.18 card, L=0.08 sidebar) for visible separation.
+- 2026-02-26: Added gold/warm accent color (`oklch(0.78 0.18 85)`) as `--warm` token — moodboard was 95% purple/pink, gold was missing.
+- 2026-02-26: Added `--success` color token for positive states.
+- 2026-02-26: Space Grotesk as display font (`--font-display`) for headings — loaded via Google Fonts.
+- 2026-02-26: New CSS utility classes: `shadow-glow-warm`, `animate-pulse-glow`, `text-gradient-warm`, `bg-radial-glow-*`, `table-striped`.
+- 2026-02-26: Borders boosted to L=0.35, muted-foreground to L=0.78 for better readability.
 
 ## UI system choice (per project)
 

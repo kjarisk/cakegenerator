@@ -135,7 +135,7 @@ export function Component() {
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <Calendar className="h-6 w-6 text-chart-4" />
-            <h1 className="text-2xl font-bold tracking-tight">
+            <h1 className="font-display text-2xl font-bold tracking-tight">
               Weekly Cake Bonanza
             </h1>
           </div>
@@ -316,11 +316,15 @@ function ScheduleView({
             return (
               <Card
                 key={assignment.weekStartDate}
-                className={isCurrentWeek ? 'border-accent/50 bg-accent/5' : ''}
+                className={isCurrentWeek ? 'border-warm/40 bg-warm/5' : ''}
               >
                 <CardContent className="flex items-center gap-4 py-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted">
-                    <CalendarDays className="h-5 w-5 text-muted-foreground" />
+                  <div
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${isCurrentWeek ? 'bg-warm/15' : 'bg-muted'}`}
+                  >
+                    <CalendarDays
+                      className={`h-5 w-5 ${isCurrentWeek ? 'text-warm' : 'text-muted-foreground'}`}
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
@@ -333,7 +337,7 @@ function ScheduleView({
                         })}
                       </span>
                       {isCurrentWeek && (
-                        <Badge className="bg-accent text-accent-foreground text-[10px]">
+                        <Badge className="bg-warm text-warm-foreground text-[10px] shadow-glow-warm">
                           This Week
                         </Badge>
                       )}

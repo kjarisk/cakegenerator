@@ -47,6 +47,22 @@
 
 ## Phase 3 — Polish + hardening
 
+### Phase 3a — UX/UI Upgrade (vibrant moodboard alignment)
+
+- [x] Color token overhaul: doubled contrast, added `--warm`/`--success` tokens, boosted borders
+- [x] Glow & lighting effects: `shadow-glow-warm`, `animate-pulse-glow`, `text-gradient-warm`, radial glows, `table-striped`
+- [x] Typography: Space Grotesk display font via Google Fonts, applied to all headings
+- [x] HomePage: hero blobs boosted, gold accents, feature card borders, stat card variants, highlight colors
+- [x] CreateRequestPage: themed header banner, form card glows, gradient submit button
+- [x] ConceptDetailPage: colored stat cards, warm cost display, striped tables
+- [x] CakeBankPage: card hover scale, gradient overlay, warm empty state
+- [x] BonanzaPage + CalendarView: warm "This Week" badge, current week highlighting, font-display headings
+- [x] Layout/Sidebar: gradient logo, warm sparkle, active nav border, stronger sidebar borders
+- [x] SharePage: font-display headings, warm cost display
+- [x] Update docs (decisions.md, plan.md)
+
+### Phase 3b — Remaining polish
+
 - [ ] Accessibility pass (keyboard/focus, labels)
 - [ ] Performance quick pass (avoid unnecessary rerenders)
 - [ ] UX polish (empty states, toasts)

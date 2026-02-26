@@ -91,7 +91,9 @@ export function Component() {
       <div className="flex flex-col gap-1">
         <div className="flex items-center gap-2">
           <Library className="h-6 w-6 text-primary" />
-          <h1 className="text-2xl font-bold tracking-tight">Cake Bank</h1>
+          <h1 className="font-display text-2xl font-bold tracking-tight">
+            Cake Bank
+          </h1>
         </div>
         <p className="text-muted-foreground">
           Browse and search your saved cake concepts by theme.
@@ -251,7 +253,7 @@ function ConceptCard({
   onRemove: () => void
 }) {
   return (
-    <Card className="group overflow-hidden hover-glow transition-all duration-200">
+    <Card className="group overflow-hidden hover-glow transition-all duration-200 hover:scale-[1.02]">
       <Link to={`/concepts/${concept.id}`}>
         <div className="relative aspect-[4/3] overflow-hidden">
           <CakeImage
@@ -259,7 +261,7 @@ function ConceptCard({
             alt={concept.title}
             className="h-full w-full object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
           />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-card to-transparent" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent opacity-60" />
         </div>
       </Link>
       <CardHeader className="pb-2">
@@ -349,10 +351,10 @@ function EmptyState({
     <Card>
       <CardContent className="flex flex-col items-center gap-4 py-12 text-center">
         <div className="relative">
-          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-accent/15 via-primary/10 to-chart-4/10 shadow-glow-sm">
-            <Cake className="h-10 w-10 text-accent/70" />
+          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-accent/20 via-primary/15 to-warm/15 shadow-glow-accent">
+            <Cake className="h-10 w-10 text-accent" />
           </div>
-          <Sparkles className="absolute -right-1 -top-1 h-4 w-4 text-accent animate-sparkle" />
+          <Sparkles className="absolute -right-1 -top-1 h-4 w-4 text-warm animate-sparkle" />
         </div>
         <div>
           <p className="text-lg font-medium">Your Cake Bank is empty</p>

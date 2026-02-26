@@ -29,19 +29,21 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
     <div className="flex h-full flex-col">
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-4 py-6">
-        <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground shadow-glow-accent">
+        <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-accent to-accent/80 text-accent-foreground shadow-glow-accent">
           <Cake className="h-5 w-5" />
-          <Sparkles className="absolute -right-1 -top-1 h-3 w-3 text-accent animate-sparkle" />
+          <Sparkles className="absolute -right-1 -top-1 h-3 w-3 text-warm animate-sparkle" />
         </div>
         <div>
-          <h1 className="text-lg font-bold tracking-tight">CakeGen</h1>
+          <h1 className="font-display text-lg font-bold tracking-tight">
+            CakeGen
+          </h1>
           <p className="text-[10px] leading-none text-muted-foreground">
             Theme Cake Generator
           </p>
         </div>
       </div>
 
-      <Separator className="mb-2 opacity-50" />
+      <Separator className="mb-2 opacity-60" />
 
       {/* Nav links */}
       <ScrollArea className="flex-1 px-2">
@@ -56,8 +58,8 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
                 cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
                   isActive
-                    ? 'bg-accent/15 text-accent shadow-glow-sm'
-                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                    ? 'bg-accent/15 text-accent shadow-glow-sm border border-accent/20'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground border border-transparent'
                 )
               }
             >
@@ -81,7 +83,7 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
       </ScrollArea>
 
       {/* Footer */}
-      <div className="border-t border-sidebar-border/50 p-4">
+      <div className="border-t border-sidebar-border p-4">
         <div className="flex items-center justify-between">
           <p className="text-[10px] text-muted-foreground/50">CakeGen v1</p>
           <span
@@ -107,7 +109,7 @@ export function Component() {
   return (
     <div className="dark flex min-h-svh bg-background">
       {/* Desktop sidebar */}
-      <aside className="hidden w-60 shrink-0 border-r border-sidebar-border/60 bg-sidebar md:block">
+      <aside className="hidden w-60 shrink-0 border-r border-sidebar-border bg-sidebar md:block">
         <NavContent />
       </aside>
 

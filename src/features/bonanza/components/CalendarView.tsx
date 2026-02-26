@@ -154,7 +154,9 @@ export function CalendarView({
     <div className="space-y-3">
       {/* Month navigation */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">{getMonthName(currentMonth)}</h2>
+        <h2 className="font-display text-lg font-semibold">
+          {getMonthName(currentMonth)}
+        </h2>
         <div className="flex items-center gap-1">
           <Button variant="outline" size="sm" onClick={goToToday}>
             Today
@@ -209,7 +211,7 @@ export function CalendarView({
                 className={[
                   'grid grid-cols-7 border-t border-border',
                   isCurrentWeekRow
-                    ? 'bg-accent/10 ring-1 ring-inset ring-accent/30 shadow-glow-sm'
+                    ? 'bg-warm/8 ring-1 ring-inset ring-warm/30'
                     : '',
                 ]
                   .filter(Boolean)
@@ -255,7 +257,7 @@ export function CalendarView({
                                 className={[
                                   'flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium leading-tight truncate',
                                   isCurrentWeekRow
-                                    ? 'bg-accent/20 text-accent-foreground'
+                                    ? 'bg-warm/20 text-foreground'
                                     : isPastWeek
                                       ? 'bg-muted text-muted-foreground'
                                       : 'bg-primary/15 text-primary',
