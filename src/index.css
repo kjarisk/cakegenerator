@@ -152,6 +152,22 @@
   }
 }
 
+/* ===== Native date/time input icons ===== */
+/* Make the calendar/clock picker icons visible on dark backgrounds */
+.dark input[type='date']::-webkit-calendar-picker-indicator,
+.dark input[type='time']::-webkit-calendar-picker-indicator,
+.dark input[type='datetime-local']::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.dark input[type='date']::-webkit-calendar-picker-indicator:hover,
+.dark input[type='time']::-webkit-calendar-picker-indicator:hover,
+.dark input[type='datetime-local']::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
 /* ===== Animations ===== */
 
 @keyframes gradient {
