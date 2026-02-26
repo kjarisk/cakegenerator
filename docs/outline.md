@@ -175,21 +175,21 @@ A lightweight team app that turns a customer’s theme request into one or more 
 
 ## 7) Definition of Done (v1)
 
-- [ ] Create Cake Request with constraints and number of concepts
-- [ ] Generate cake concept(s): recipe + image + extras suggestions
+- [x] Create Cake Request with constraints and number of concepts
+- [x] Generate cake concept(s): recipe + image + extras suggestions
 - [x] AI integration: GPT-4o for recipes/text, DALL-E 3 for images, with mock fallback
-- [ ] Regenerate (full concept OR recipe-only OR image-only)
-- [ ] Shopping plan: store suggestions + per-ingredient estimated prices + totals
-- [ ] Save cake concept to Cake Bank under Theme Categories + tags
-- [ ] Browse/search Cake Bank by theme + tags
-- [ ] Share cake concept via link and collect comments + approval state
-- [ ] Weekly Cake Bonanza: create schedule + assign users to weeks + view upcoming assignments
-- [ ] Weekly Cake Bonanza: calendar view + rate each week's cake (1–5 stars)
-- [ ] JSON file persistence works (read/write) with basic validation + backup
-- [ ] Basic error states + loading states exist
-- [ ] Responsive for desktop + mobile
-- [ ] Tests exist for critical logic (generation orchestration, JSON persistence, share token access)
-- [ ] README updated with run instructions + data file format
+- [x] Regenerate (full concept OR recipe-only OR image-only)
+- [x] Shopping plan: store suggestions + per-ingredient estimated prices + totals
+- [x] Save cake concept to Cake Bank under Theme Categories + tags
+- [x] Browse/search Cake Bank by theme + tags
+- [x] Share cake concept via link and collect comments + approval state
+- [x] Weekly Cake Bonanza: create schedule + assign users to weeks + view upcoming assignments
+- [x] Weekly Cake Bonanza: calendar view + rate each week's cake (1–5 stars)
+- [x] JSON file persistence works (read/write) with basic validation + backup
+- [x] Basic error states + loading states exist
+- [x] Responsive for desktop + mobile
+- [ ] Tests exist for critical logic (generation orchestration, JSON persistence, share token access) — **PARTIAL**: dispatcher, prompts, mock-ai, storage, schemas, store tested; sharing token flow + bonanza mutations untested
+- [ ] README updated with run instructions + data file format — **PARTIAL**: QUICKSTART.md is up to date; README.md still shows vibecoding template copy
 
 ---
 
